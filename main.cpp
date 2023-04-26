@@ -83,7 +83,7 @@ IDxcBlob* CompileShader(// CompilerするShaderファイルへのパス
 {
 	// 1.hlslファイルを読む
 	// これからシェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Bigin CompileShader,path{},profile{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Begin CompileShader,path{},profile{}\n", filePath, profile)));
 	// hlslファイルを読み込む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -130,7 +130,7 @@ IDxcBlob* CompileShader(// CompilerするShaderファイルへのパス
 	// 4.Compile結果を受け取って返す
 	// コンパイル結果から実行用のバイナリ部分を取得
 	IDxcBlob* shaderBlob = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderBlob), nullptr);
+	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	// 成功したログを出す
 	Log(ConvertString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
@@ -395,7 +395,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	ID3DBlob* signatureBlob = nullptr;
-	ID3D10Blob* errorBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
@@ -410,14 +410,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	assert(SUCCEEDED(hr));
 
 	// InputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDesc[1] = {};
-	inputElementDesc[0].SemanticName = "POSITION";
-	inputElementDesc[0].SemanticIndex = 0;
-	inputElementDesc[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDesc[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[1] = {};
+	inputElementDescs[0].SemanticName = "POSITION";
+	inputElementDescs[0].SemanticIndex = 0;
+	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
-	inputLayoutDesc.pInputElementDescs = inputElementDesc;
-	inputLayoutDesc.NumElements = _countof(inputElementDesc);
+	inputLayoutDesc.pInputElementDescs = inputElementDescs;
+	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 
 
 	// BlendStateの設定
@@ -435,15 +435,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	// Shaderをコンパイル
-	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3D.VS.hlsl",
+	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3d.VS.hlsl",
 		L"vs_6_0",dxcUtils,dxcCompiler,includeHandler);
 	assert(vertexShaderBlob != nullptr);
 
-	IDxcBlob* pixelShaderBlob = CompileShader(L"Object#D.PS.hlsl",
+	IDxcBlob* pixelShaderBlob = CompileShader(L"Object3d.PS.hlsl",
 		L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 
 
+	// PSOを生成
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
@@ -455,7 +456,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
 	//書き込むRTVの情報
 	graphicsPipelineStateDesc.NumRenderTargets = 1;
-	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_B8G8R8X8_UNORM_SRGB;
+	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	//利用するトポロジ(形状)のタイプ。三角形
 	graphicsPipelineStateDesc.PrimitiveTopologyType =
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -508,9 +509,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//左下
 	vertexData[0] = { -0.5f,-0.5f,0.0f,1.0f };
 	//上
-	vertexData[1] = { 0.0f,0.5f,8.0f,1.0f };
+	vertexData[1] = { 0.0f,0.5f,0.0f,1.0f };
 	//右下
-	vertexData[2] = { 0.5f,-0.5f,0.8f,1.0f };
+	vertexData[2] = { 0.5f,-0.5f,0.0f,1.0f };
 
 	// ビューポート
 	D3D12_VIEWPORT viewport{};
@@ -531,6 +532,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	scissorRect.bottom = kClientHeight;
 
 
+	// コマンドを積む
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &scissorRect);
 	// RootSignatureを設定。PSOにしているけど別途設定が必要
@@ -542,19 +544,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// 描画!(DrawColl)。3頂点で1つのインスタンス。インスタンスについては今後
 	commandList->DrawInstanced(3, 1, 0, 0);
 
-	// 解放処理
-	vertexResource->Release();
-	graphicsPipelineState->Release();
-	signatureBlob->Release();
-	if (errorBlob)
-	{
-		errorBlob->Release();
-	}
-	rootSignature->Release();
-	pixelShaderBlob->Release();
-	vertexShaderBlob->Release();
-
-
+	
 
 	// 描画先のRTVを設定する
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
@@ -611,6 +601,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		else
 		{
 			//ゲームの処理
+
 		}
 	}
 
@@ -626,6 +617,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	device->Release();
 	useAdapter->Release();
 	dxgiFactory->Release();
+
+	// 解放処理
+	vertexResource->Release();
+	graphicsPipelineState->Release();
+	signatureBlob->Release();
+	if (errorBlob)
+	{
+		errorBlob->Release();
+	}
+	rootSignature->Release();
+	pixelShaderBlob->Release();
+	vertexShaderBlob->Release();
 #ifdef _DEBUG
 	debugController->Release();
 #endif // _DEBUG
@@ -640,9 +643,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
 		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
 		debug->Release();
-
-		// 警告時に止まる
-		/*infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);*/
 	}
 
 	return 0;
