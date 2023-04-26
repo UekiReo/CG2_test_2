@@ -468,6 +468,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// １兆点あたりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(Vector4);
 
+
 	// 頂点リソースにデータを書き込む
 	Vector4* vertexData = nullptr;
 	// 書き込むためのアドレスを取得
@@ -478,6 +479,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	vertexData[1] = { 0.0f,0.5f,0.0f,1.0f };
 	//右下
 	vertexData[2] = { 0.5f,-0.5f,0.0f,1.0f };
+
 
 	// ビューポート
 	D3D12_VIEWPORT viewport{};
