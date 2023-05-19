@@ -254,7 +254,7 @@ void DirectXCommon::CreateFinalRenderTargets()
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力情報をSRGBに変換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2Drテクスチャとして書き込む
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2Dテクスチャとして書き込む
 	//ディスクリプタの先頭を取得する
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	//RTVを2つ作る為、ディスクリプタを2つ用意
@@ -275,7 +275,7 @@ void DirectXCommon::CreateFinalRenderTargets()
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	//Noneにする
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//barrier対象のリソース、バックばっがに対して行う
+	//barrier対象のリソース、バックバッファに対して行う
 	barrier.Transition.pResource = swapChainResources[backBufferIndex];
 	//遷移前のresourcestate
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
