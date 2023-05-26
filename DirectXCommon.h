@@ -71,16 +71,16 @@ private:
 	static HANDLE fenceEvent_;
 	//
 
-	//
+	//buffer
 	static	int32_t backBufferWidth_;
 	static	int32_t backBufferHeight_;
 	//
 
-	//
+	//barrier
 	static	inline D3D12_RESOURCE_BARRIER barrier_{};
 	//
 
-	//
+	//hr
 	static HRESULT hr_;
 	//
 
