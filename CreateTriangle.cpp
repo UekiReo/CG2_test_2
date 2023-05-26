@@ -2,13 +2,14 @@
 #include<assert.h>
 #include"CreateEngine.h"
 
-void CreateTriangle::Initialize(DirectXCommon* dxCommon) {
+void CreateTriangle::Initialize(DirectXCommon* dxCommon) 
+{
 	dxCommon_ = dxCommon;
 	SettingVertex();
-
 }
 
-void CreateTriangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c) {
+void CreateTriangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c) 
+{
 	//左下
 	vertexData_[0] = a;
 	//上
@@ -22,14 +23,15 @@ void CreateTriangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c) 
 	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//描画
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
 }
 
-void CreateTriangle::Finalize() {
+void CreateTriangle::Finalize() 
+{
 	vertexResource_->Release();
 }
 
-void CreateTriangle::SettingVertex() {
+void CreateTriangle::SettingVertex() 
+{
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uplodeHeapProperties{};
 	uplodeHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
@@ -37,7 +39,7 @@ void CreateTriangle::SettingVertex() {
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
 	//バッファリソース。テクスチャの場合はまた別の設定をする
 	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * 3;//リソースサイズ　今回はvector4を四分割
+	vertexResourceDesc.Width = sizeof(Vector4) * 3;//リソースサイズ　
 	//バッファの場合はこれらは１にする決まり
 	vertexResourceDesc.Height = 1;
 	vertexResourceDesc.DepthOrArraySize = 1;

@@ -1,7 +1,8 @@
 #include "CreateEngine.h"
 #include <assert.h>
 
-IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) {
+IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_t* profile, IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler) 
+{
 	//これからシェーダーをコンパイルする旨をログに出す
 	Log(ConvertString(std::format(L"Begin CompileShader, path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
@@ -14,7 +15,8 @@ IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_
 	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
 	shaderSourceBuffer.Size = shaderSource->GetBufferSize();
 	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
-	LPCWSTR arguments[] = {
+	LPCWSTR arguments[] = 
+	{
 		filePath.c_str(),//コンパイル対象のhlslファイル名
 		L"-E",L"main",//エントリーポイントの指定。基本的にmain以外にはしない
 		L"-T",profile,//ShaderProflieの設定
@@ -22,6 +24,7 @@ IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_
 		L"-Od", //最適化を外しておく
 		L"-Zpr",//メモリレイアウトは行優先
 	};
+
 	//実際にShaderをコンパイルする
 	IDxcResult* shaderResult = nullptr;
 	dxCommon_->SetHr(dxcCompiler->Compile(
@@ -37,7 +40,8 @@ IDxcBlob* CreateEngine::CompileShader(const std::wstring& filePath, const wchar_
 	//警告・エラーが出たらログに出して止める
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
-	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
+	if (shaderError != nullptr && shaderError->GetStringLength() != 0) 
+	{
 		Log(shaderError->GetStringPointer());
 		//警告・エラーダメ絶対
 		assert(false);
@@ -71,7 +75,8 @@ void CreateEngine::InitializeDxcCompiler()
 	assert(SUCCEEDED(hr));
 }
 
-void CreateEngine::CreateRootSignature() {
+void CreateEngine::CreateRootSignature() 
+{
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags =
@@ -83,7 +88,8 @@ void CreateEngine::CreateRootSignature() {
 	HRESULT hr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
-	if (FAILED(dxCommon_->GetHr())) {
+	if (FAILED(dxCommon_->GetHr())) 
+	{
 		Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
@@ -94,7 +100,8 @@ void CreateEngine::CreateRootSignature() {
 	assert(SUCCEEDED(hr));
 }
 
-void CreateEngine::CreateInputlayOut() {
+void CreateEngine::CreateInputlayOut() 
+{
 	inputElementDescs_[0].SemanticName = "POSITION";
 	inputElementDescs_[0].SemanticIndex = 0;
 	inputElementDescs_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -104,13 +111,15 @@ void CreateEngine::CreateInputlayOut() {
 	inputLayoutDesc_.NumElements = _countof(inputElementDescs_);
 }
 
-void CreateEngine::BlendState() {
+void CreateEngine::BlendState() 
+{
 	//すべての色要素を書き込む
 	blendDesc_.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
 }
 
-void CreateEngine::RasterizerState() {
+void CreateEngine::RasterizerState() 
+{
 	//裏面（時計回り）を表示しない
 	rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
 	//三角形の中を塗りつぶす
@@ -127,7 +136,8 @@ void CreateEngine::RasterizerState() {
 	assert(pixelShaderBlob_ != nullptr);
 }
 
-void CreateEngine::InitializePSO() {
+void CreateEngine::InitializePSO()
+{
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature_;//RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc_;//Inputlayout
@@ -153,7 +163,8 @@ void CreateEngine::InitializePSO() {
 	assert(SUCCEEDED(hr));
 }
 
-void CreateEngine::VertexResource() {
+void CreateEngine::VertexResource() 
+{
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uplodeHeapProperties{};
 	uplodeHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
@@ -187,7 +198,8 @@ void CreateEngine::VertexResource() {
 
 }
 
-void CreateEngine::ViewPort() {
+void CreateEngine::ViewPort() 
+{
 	//クライアント領域のサイズと一緒にして画面全体に表示
 	viewport_.Width = WinApp::kClientWidth;
 	viewport_.Height = WinApp::kClientHeight;
@@ -197,7 +209,8 @@ void CreateEngine::ViewPort() {
 	viewport_.MaxDepth = 1.0f;
 }
 
-void CreateEngine::ScissorRect() {
+void CreateEngine::ScissorRect() 
+{
 	//シザー短形
 	scissorRect_.left = 0;
 	scissorRect_.right = WinApp::kClientWidth;
@@ -205,14 +218,17 @@ void CreateEngine::ScissorRect() {
 	scissorRect_.bottom = WinApp::kClientHeight;
 }
 
-void CreateEngine::Initialize() {
-	for (int i = 0; i < 10; i++) {
+void CreateEngine::Initialize() 
+{
+	for (int i = 0; i < 10; i++)
+	{
 		triangle_[i] = new CreateTriangle();
 		triangle_[i]->Initialize(dxCommon_);
 	}
 }
 
-void CreateEngine::Initialization(WinApp* win, const wchar_t* title, int32_t width, int32_t height) {
+void CreateEngine::Initialization(WinApp* win, const wchar_t* title, int32_t width, int32_t height) 
+{
 	dxCommon_->Initialization(win, title, win->kClientWidth, win->kClientHeight);
 
 	InitializeDxcCompiler();
@@ -233,24 +249,28 @@ void CreateEngine::Initialization(WinApp* win, const wchar_t* title, int32_t wid
 }
 
 
-void CreateEngine::BeginFrame() {
+void CreateEngine::BeginFrame() 
+{
 	dxCommon_->PreDraw();
 	//viewportを設定
 	dxCommon_->GetCommandList()->RSSetViewports(1, &viewport_);
 	//scirssorを設定
 	dxCommon_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
-	//RootSignatureを設定。PS0とは別途設定が必要
+	//RootSignatureを設定。PSOとは別途
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_);
-	//PS0を設定
+	//PSOを設定
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_);
 }
 
-void CreateEngine::EndFrame() {
+void CreateEngine::EndFrame() 
+{
 	dxCommon_->PostDraw();
 }
 
-void CreateEngine::Finalize() {
-	for (int i = 0; i < 10; i++) {
+void CreateEngine::Finalize() 
+{
+	for (int i = 0; i < 10; i++) 
+	{
 		triangle_[i]->Finalize();
 	}
 	graphicsPipelineState_->Release();
@@ -264,11 +284,12 @@ void CreateEngine::Finalize() {
 	dxCommon_->Finalize();
 }
 
-void CreateEngine::Update() {
-
+void CreateEngine::Update() 
+{
 }
 
-void CreateEngine::DrawTriangle(const Vector4& a, const Vector4& b, const Vector4& c) {
+void CreateEngine::DrawTriangle(const Vector4& a, const Vector4& b, const Vector4& c) 
+{
 	triangleCount_++;
 	triangle_[triangleCount_]->Draw(a, b, c);
 	if (triangleCount_ >= 9) {
