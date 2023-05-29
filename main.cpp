@@ -14,9 +14,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	Engine->Initialize();
 
-	Vector4 data1 = { 0.4f,0.4f,0.0f,1.0f };
-	Vector4 data2 = { 0.6f,0.8f,0.0f,1.0f };
-	Vector4 data3 = { 0.8f,0.4f,0.0f,1.0f };
+	Vector4 data1 = { -0.2f,0.4f,0.0f,1.0f };
+	Vector4 data2 = { 0.0f,0.8f,0.0f,1.0f };
+	Vector4 data3 = { 0.2f,0.4f,0.0f,1.0f };
 
 	Vector4 data4 = { -0.8f,-0.8f,0.0f,1.0f };
 	Vector4 data5 = { -0.6f,-0.4f,0.0f,1.0f };
@@ -33,6 +33,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Vector4 data13 = { -0.2f,-0.2f,0.0f,1.0f };
 	Vector4 data14 = { 0.0f,0.2f,0.0f,1.0f };
 	Vector4 data15 = { 0.2f,-0.2f,0.0f,1.0f };
+
+	Vector4 data16 = { 0.4f,0.4f,0.0f,1.0f };
+	Vector4 data17 = { 0.6f,0.8f,0.0f,1.0f };
+	Vector4 data18 = { 0.8f,0.4f,0.0f,1.0f };
+
+	Vector4 data19 = { -0.8f,-0.2f,0.0f,1.0f };
+	Vector4 data20 = { -0.6f,0.2f,0.0f,1.0f };
+	Vector4 data21 = { -0.4f,-0.2f,0.0f,1.0f };
+
+	Vector4 data22 = { -0.8f,0.4f,0.0f,1.0f };
+	Vector4 data23 = { -0.6f,0.8f,0.0f,1.0f };
+	Vector4 data24 = { -0.4f,0.4f,0.0f,1.0f };
+
+	Vector4 data25 = { -0.2f,-0.8f,0.0f,1.0f };
+	Vector4 data26 = { 0.0f,-0.4f,0.0f,1.0f };
+	Vector4 data27 = { 0.2f,-0.8f,0.0f,1.0f };
+
+
 
 	MSG msg{};
 	//ウィンドウのxが押されるまでループ
@@ -58,6 +76,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Engine->DrawTriangle(data10, data11, data12);
 
 			Engine->DrawTriangle(data13, data14, data15);
+
+			Engine->DrawTriangle(data16, data17, data18);
+
+			Engine->DrawTriangle(data19, data20, data21);
+
+			Engine->DrawTriangle(data22, data23, data24);
+
+			Engine->DrawTriangle(data25, data26, data27);
 
 			Engine->EndFrame();
 		}
