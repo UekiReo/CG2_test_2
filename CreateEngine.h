@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DirectXCommon.h"
 #include <dxcapi.h>
 #include"Vector4.h"
@@ -26,7 +26,7 @@ private:
 	static WinApp* win_;
 	static	DirectXCommon* dxCommon_;
 
-	CreateTriangle* triangle_[10];
+	CreateTriangle* triangle_[11];
 
 	int triangleCount_;
 

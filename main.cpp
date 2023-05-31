@@ -50,6 +50,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Vector4 data26 = { 0.0f,-0.4f,0.0f,1.0f };
 	Vector4 data27 = { 0.2f,-0.8f,0.0f,1.0f };
 
+	Vector4 data28 = { 0.4f,-0.2f,0.0f,1.0f };
+	Vector4 data29 = { 0.6f,0.2f,0.0f,1.0f };
+	Vector4 data30 = { 0.8f,-0.2f,0.0f,1.0f };
+
 
 
 	MSG msg{};
@@ -84,6 +88,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			Engine->DrawTriangle(data22, data23, data24);
 
 			Engine->DrawTriangle(data25, data26, data27);
+
+			Engine->DrawTriangle(data28, data29, data30);
 
 			Engine->EndFrame();
 		}
