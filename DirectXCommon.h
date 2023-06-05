@@ -84,7 +84,6 @@ private:
 	static HRESULT hr_;
 	//
 
-
 private:
 	void InitializeDXGIDevice();
 
