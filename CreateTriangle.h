@@ -2,7 +2,7 @@
 #include"DirectXCommon.h"
 #include"Vector4.h"
 
-class MyEngine;
+class CreateEngine;
 
 class CreateTriangle {
 public:
@@ -18,7 +18,7 @@ private:
 	void SettingColor();
 
 private:
-	MyEngine* Engine_;
+	CreateEngine* Engine_;
 
 	DirectXCommon* dxCommon_;
 
