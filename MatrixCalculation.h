@@ -1,6 +1,7 @@
 #pragma once
 #include "Matrix4x4.h"
 #include "Vector3.h"
+#include "Vector4.h"
 #include <assert.h>
 #include <cmath>
 
@@ -49,4 +50,3 @@ Matrix4x4 MakeIdentity4x4();
 
 //透視投影行列
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRadio, float nearClip, float farClip);
-

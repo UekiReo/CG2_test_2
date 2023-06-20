@@ -94,6 +94,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="CreateTriangle.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MatrixCalculation.cpp" />
     <ClCompile Include="String.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
@@ -115,7 +116,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="CreateEngine.h" />
     <ClInclude Include="CreateTriangle.h" />
     <ClInclude Include="DirectXCommon.h" />
+    <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="MatrixCalculation.h" />
     <ClInclude Include="String.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>

@@ -22,6 +22,9 @@
     <Filter Include="ヘッダー ファイル\math">
       <UniqueIdentifier>{0e09d4c1-0f03-4077-8d89-eeed5b5ef7ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\math">
+      <UniqueIdentifier>{89a191ed-834e-412a-813f-de39361c468d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="String.cpp">
       <Filter>ソース ファイル\base</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixCalculation.cpp">
+      <Filter>ソース ファイル\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +71,15 @@
     </ClInclude>
     <ClInclude Include="String.h">
       <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>ヘッダー ファイル\math</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixCalculation.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
