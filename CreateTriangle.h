@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DirectXCommon.h"
 #include "Vector3.h"
 #include "Vector4.h"
@@ -7,7 +7,8 @@
 
 class CreateEngine;
 
-class CreateTriangle {
+class CreateTriangle 
+{
 public:
 	void Initialize(DirectXCommon* dxCommon);
 
