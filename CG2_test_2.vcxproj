@@ -90,8 +90,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CreateEngine.cpp" />
-    <ClCompile Include="CreateTriangle.cpp" />
+    <ClCompile Include="MyEngine.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="String.cpp" />
@@ -112,8 +112,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CreateEngine.h" />
-    <ClInclude Include="CreateTriangle.h" />
+    <ClInclude Include="MyEngine.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Vector4.h" />
