@@ -1,5 +1,5 @@
-#include "CreateEngine.h"
-#include "CreateTriangle.h"
+#include "MyEngine.h"
+#include "Triangle.h"
 
 const wchar_t kWindowTitle[] = { L"CG2" };
 
@@ -13,48 +13,48 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Engine->Initialization(win_, kWindowTitle, 1280, 720);
 
 	Engine->Initialize();
+	Vector4 data[30];
 
-	Vector4 data1 = { -0.2f,0.4f,0.0f,1.0f };
-	Vector4 data2 = { 0.0f,0.8f,0.0f,1.0f };
-	Vector4 data3 = { 0.2f,0.4f,0.0f,1.0f };
+	data[0] = { -0.2f,0.4f,0.0f,1.0f };
+	data[1] = { 0.0f,0.8f,0.0f,1.0f };
+	data[2] = { 0.2f,0.4f,0.0f,1.0f };
 
-	Vector4 data4 = { -0.8f,-0.8f,0.0f,1.0f };
-	Vector4 data5 = { -0.6f,-0.4f,0.0f,1.0f };
-	Vector4 data6 = { -0.4f,-0.8f,0.0f,1.0f };
-
-	Vector4 data7 = { 0.4f,-0.8f,0.0f,1.0f };
-	Vector4 data8 = { 0.6f,-0.4f,0.0f,1.0f };
-	Vector4 data9 = { 0.8f,-0.8f,0.0f,1.0f };
-
-	Vector4 data10 = { 0.1f,0.1f,0.0f,1.0f };
-	Vector4 data11 = { 0.3f,0.5f,0.0f,1.0f };
-	Vector4 data12 = { 0.5f,0.1f,0.0f,1.0f };
-
-	Vector4 data13 = { -0.2f,-0.2f,0.0f,1.0f };
-	Vector4 data14 = { 0.0f,0.2f,0.0f,1.0f };
-	Vector4 data15 = { 0.2f,-0.2f,0.0f,1.0f };
-
-	Vector4 data16 = { 0.4f,0.4f,0.0f,1.0f };
-	Vector4 data17 = { 0.6f,0.8f,0.0f,1.0f };
-	Vector4 data18 = { 0.8f,0.4f,0.0f,1.0f };
-
-	Vector4 data19 = { -0.8f,-0.2f,0.0f,1.0f };
-	Vector4 data20 = { -0.6f,0.2f,0.0f,1.0f };
-	Vector4 data21 = { -0.4f,-0.2f,0.0f,1.0f };
-
-	Vector4 data22 = { -0.8f,0.4f,0.0f,1.0f };
-	Vector4 data23 = { -0.6f,0.8f,0.0f,1.0f };
-	Vector4 data24 = { -0.4f,0.4f,0.0f,1.0f };
-
-	Vector4 data25 = { -0.2f,-0.8f,0.0f,1.0f };
-	Vector4 data26 = { 0.0f,-0.4f,0.0f,1.0f };
-	Vector4 data27 = { 0.2f,-0.8f,0.0f,1.0f };
-
-	Vector4 data28 = { 0.4f,-0.2f,0.0f,1.0f };
-	Vector4 data29 = { 0.6f,0.2f,0.0f,1.0f };
-	Vector4 data30 = { 0.8f,-0.2f,0.0f,1.0f };
-
-
+	data[3] = { -0.8f,-0.8f,0.0f,1.0f };
+	data[4] = { -0.6f,-0.4f,0.0f,1.0f };
+	data[5] = { -0.4f,-0.8f,0.0f,1.0f };
+	
+	data[6] = { 0.4f,-0.8f,0.0f,1.0f };
+	data[7] = { 0.6f,-0.4f,0.0f,1.0f };
+	data[8] = { 0.8f,-0.8f,0.0f,1.0f };
+	
+	data[9] = { 0.1f,0.1f,0.0f,1.0f };
+	data[10] = { 0.3f,0.5f,0.0f,1.0f };
+	data[11] = { 0.5f,0.1f,0.0f,1.0f };
+	
+	data[12] = { -0.2f,-0.2f,0.0f,1.0f };
+	data[13] = { 0.0f,0.2f,0.0f,1.0f };
+	data[14] = { 0.2f,-0.2f,0.0f,1.0f };
+	
+	data[15] = { 0.4f,0.4f,0.0f,1.0f };
+	data[16] = { 0.6f,0.8f,0.0f,1.0f };
+	data[17] = { 0.8f,0.4f,0.0f,1.0f };
+	
+	data[18] = { -0.8f,-0.2f,0.0f,1.0f };
+	data[19] = { -0.6f,0.2f,0.0f,1.0f };
+	data[20] = { -0.4f,-0.2f,0.0f,1.0f };
+	
+	data[21] = { -0.8f,0.4f,0.0f,1.0f };
+	data[22] = { -0.6f,0.8f,0.0f,1.0f };
+	data[23] = { -0.4f,0.4f,0.0f,1.0f };
+	
+	data[24] = { -0.2f,-0.8f,0.0f,1.0f };
+	data[25] = { 0.0f,-0.4f,0.0f,1.0f };
+	data[26] = { 0.2f,-0.8f,0.0f,1.0f };
+	
+	data[27] = { 0.4f,-0.2f,0.0f,1.0f };
+	data[28] = { 0.6f,0.2f,0.0f,1.0f };
+	data[29] = { 0.8f,-0.2f,0.0f,1.0f };
+	
 
 	MSG msg{};
 	//ウィンドウのxが押されるまでループ
@@ -71,25 +71,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 			//三角形描画
-			Engine->DrawTriangle(data1, data2, data3);
+			Engine->DrawTriangle(data[0], data[1], data[2]);
 
-			Engine->DrawTriangle(data4, data5, data6);
+			Engine->DrawTriangle(data[3], data[4], data[5]);
 
-			Engine->DrawTriangle(data7, data8, data9);
+			Engine->DrawTriangle(data[6], data[7], data[8]);
 
-			Engine->DrawTriangle(data10, data11, data12);
+			Engine->DrawTriangle(data[9], data[10], data[11]);
 
-			Engine->DrawTriangle(data13, data14, data15);
+			Engine->DrawTriangle(data[12], data[13], data[14]);
 
-			Engine->DrawTriangle(data16, data17, data18);
+			Engine->DrawTriangle(data[15], data[16], data[17]);
 
-			Engine->DrawTriangle(data19, data20, data21);
+			Engine->DrawTriangle(data[18], data[19], data[20]);
 
-			Engine->DrawTriangle(data22, data23, data24);
+			Engine->DrawTriangle(data[21], data[22], data[23]);
 
-			Engine->DrawTriangle(data25, data26, data27);
+			Engine->DrawTriangle(data[24], data[25], data[26]);
 
-			Engine->DrawTriangle(data28, data29, data30);
+			Engine->DrawTriangle(data[27], data[28], data[29]);
 
 			Engine->EndFrame();
 		}

@@ -2,7 +2,7 @@
 #include "DirectXCommon.h"
 #include <dxcapi.h>
 #include"Vector4.h"
-#include "CreateTriangle.h"
+#include "Triangle.h"
 #pragma comment(lib,"dxcompiler.lib")
 
 class CreateEngine

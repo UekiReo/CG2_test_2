@@ -1,6 +1,6 @@
-#include "CreateTriangle.h"
+#include "Triangle.h"
 #include<assert.h>
-#include"CreateEngine.h"
+#include"MyEngine.h"
 
 void CreateTriangle::Initialize(DirectXCommon* dxCommon) 
 {
