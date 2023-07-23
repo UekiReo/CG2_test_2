@@ -1,30 +1,39 @@
 #pragma once
-#include"DirectXCommon.h"
-#include"Vector4.h"
+#include <string>
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <dxgidebug.h>
+#pragma comment(lib,"d3d12.lib")
+#pragma comment(lib,"dxgi.lib")
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
+#include <dxcapi.h>
+#pragma comment(lib, "dxcompiler.lib")
+#include "DirectXCommon.h"
+#include "Vector4.h"
 
-class CreateEngine;
-
-class CreateTriangle {
+class Triangle
+{
 public:
-	void Initialize(DirectXCommon* dxCommon);
 
-	void Draw(const Vector4& a, const Vector4& b, const Vector4& c);
+	~Triangle() = default;
 
-	void Finalize();
+	// VertexResourceの生成
+	void CreateVertexResource();
 
-private:
-	void SettingVertex();
+	// VertexBufferViewの生成
+	void CreateVertexBufferView();
 
-private:
-	CreateEngine* Engine;
+	// 初期化
+	void Initialize(DirectXCommon* directXCommon, const Vector4& leftBottom, const Vector4& top, const Vector4& rightBottom);
 
-	DirectXCommon* dxCommon_;
+	// 三角形描画
+	void Draw();
 
-	Vector4* vertexData_;
-
+public:
+	DirectXCommon* directXCommon_;
 	ID3D12Resource* vertexResource_;
-
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
-
+	Vector4* vertexData_;
 };
 

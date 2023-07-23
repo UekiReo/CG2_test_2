@@ -1,101 +1,49 @@
+#include <Windows.h>
+#include "ConvertString.h"
+#include <cstdint>
+#include <format>
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <cassert>
+#pragma comment(lib,"d3d12.lib")
+#pragma comment(lib,"dxgi.lib")
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
+#include <dxcapi.h>
+#pragma comment(lib, "dxcompiler.lib")
+#include "Vector4.h"
 #include "MyEngine.h"
-#include "Triangle.h"
 
-const wchar_t kWindowTitle[] = { L"CG2" };
+// Windowsアプリでのエントリーポイント(main関数)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-//Windowsアプリでのエントリーポイント
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) 
-{
+	MyEngine* engine = new MyEngine();
+	// エンジンの初期化
+	engine->Initialize();
 
-	//初期化
-	WinApp* win_ = nullptr;
-	CreateEngine* Engine = new CreateEngine;
-	Engine->Initialization(win_, kWindowTitle, 1280, 720);
-
-	Engine->Initialize();
-	Vector4 data[30];
-
-	data[0] = { -0.2f,0.4f,0.0f,1.0f };
-	data[1] = { 0.0f,0.8f,0.0f,1.0f };
-	data[2] = { 0.2f,0.4f,0.0f,1.0f };
-
-	data[3] = { -0.8f,-0.8f,0.0f,1.0f };
-	data[4] = { -0.6f,-0.4f,0.0f,1.0f };
-	data[5] = { -0.4f,-0.8f,0.0f,1.0f };
-	
-	data[6] = { 0.4f,-0.8f,0.0f,1.0f };
-	data[7] = { 0.6f,-0.4f,0.0f,1.0f };
-	data[8] = { 0.8f,-0.8f,0.0f,1.0f };
-	
-	data[9] = { 0.1f,0.1f,0.0f,1.0f };
-	data[10] = { 0.3f,0.5f,0.0f,1.0f };
-	data[11] = { 0.5f,0.1f,0.0f,1.0f };
-	
-	data[12] = { -0.2f,-0.2f,0.0f,1.0f };
-	data[13] = { 0.0f,0.2f,0.0f,1.0f };
-	data[14] = { 0.2f,-0.2f,0.0f,1.0f };
-	
-	data[15] = { 0.4f,0.4f,0.0f,1.0f };
-	data[16] = { 0.6f,0.8f,0.0f,1.0f };
-	data[17] = { 0.8f,0.4f,0.0f,1.0f };
-	
-	data[18] = { -0.8f,-0.2f,0.0f,1.0f };
-	data[19] = { -0.6f,0.2f,0.0f,1.0f };
-	data[20] = { -0.4f,-0.2f,0.0f,1.0f };
-	
-	data[21] = { -0.8f,0.4f,0.0f,1.0f };
-	data[22] = { -0.6f,0.8f,0.0f,1.0f };
-	data[23] = { -0.4f,0.4f,0.0f,1.0f };
-	
-	data[24] = { -0.2f,-0.8f,0.0f,1.0f };
-	data[25] = { 0.0f,-0.4f,0.0f,1.0f };
-	data[26] = { 0.2f,-0.8f,0.0f,1.0f };
-	
-	data[27] = { 0.4f,-0.2f,0.0f,1.0f };
-	data[28] = { 0.6f,0.2f,0.0f,1.0f };
-	data[29] = { 0.8f,-0.2f,0.0f,1.0f };
-	
+#pragma region メインループ
 
 	MSG msg{};
-	//ウィンドウのxが押されるまでループ
+	// ウィンドウの×ボタンが押されるまでループ
 	while (msg.message != WM_QUIT) {
-		//windowのメッセージを最優先で処理させる
+		// Windowにメッセージが来ていたら最優先で処理させる
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 		else {
-			//ゲームの処理
-			Engine->Update();
-			Engine->BeginFrame();
+			// ループ処理
+			engine->BeginFrame();
 
+			// 三角形
+			engine->Draw();
 
-			//三角形描画
-			Engine->DrawTriangle(data[0], data[1], data[2]);
-
-			Engine->DrawTriangle(data[3], data[4], data[5]);
-
-			Engine->DrawTriangle(data[6], data[7], data[8]);
-
-			Engine->DrawTriangle(data[9], data[10], data[11]);
-
-			Engine->DrawTriangle(data[12], data[13], data[14]);
-
-			Engine->DrawTriangle(data[15], data[16], data[17]);
-
-			Engine->DrawTriangle(data[18], data[19], data[20]);
-
-			Engine->DrawTriangle(data[21], data[22], data[23]);
-
-			Engine->DrawTriangle(data[24], data[25], data[26]);
-
-			Engine->DrawTriangle(data[27], data[28], data[29]);
-
-			Engine->EndFrame();
+			engine->EndFrame();
 		}
 	}
-
-	Engine->Finalize();
+	// 解放処理
+	engine->Release();
+#pragma endregion
 
 	return 0;
 }
