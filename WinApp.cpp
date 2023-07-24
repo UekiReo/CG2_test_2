@@ -1,8 +1,41 @@
 #include "WinApp.h"
-#include <Windows.h>
-#include <cstdint>
-#include <string>
-#include <format>
+#include <windows.h>
+#include <tchar.h>
+#include<d3d12.h>
+
+//コンストラクタ
+WinApp::WinApp()
+{
+	Title_ = L"CG2_LE2B_04_ウエキレオ";
+
+	hInst_ = nullptr;
+	hwnd_ = nullptr;
+
+	Width_ = 1280;
+	Height_ = 720;
+
+	wrc_ = {};
+	wc_ = {};
+}
+
+//デストラクタ
+WinApp::~WinApp()
+{
+	End();
+}
+
+
+//開始
+void WinApp::StartApp()
+{
+	Initialize();
+}
+
+//終了
+void WinApp::EndApp()
+{
+	End();
+}
 
 // ウィンドウプロシージャ
 LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
@@ -21,8 +54,19 @@ LRESULT CALLBACK WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
+//ウィンドウの初期化
+bool WinApp::Initialize()
+{
+	if (!WindowClassRegister())
+	{
+		return false;
+	}
+	return true;
+}
+
+
 // ウィンドウクラスの登録
-void WinApp::WindowClassRegister() 
+bool WinApp::WindowClassRegister() 
 {
 	// ウィンドウプロシージャ
 	wc_.lpfnWndProc = WindowProc;
@@ -35,77 +79,63 @@ void WinApp::WindowClassRegister()
 
 	// ウィンドウクラスを登録する
 	RegisterClass(&wc_);
-}
 
-// ウィンドウサイズを決める
-void WinApp::WindowSizeDecide()
-{
+	//ウィンドウサイズを表す構造体にクライアント領域を入れる
+	wrc_ = { 0,0,Width_,Height_ };
 
-	// ウィンドウサイズを表す構造体にクライアント領域を入れる
-	wrc_ = { 0, 0, kClientWidth_, kClientHeight_ };
-
-	// クライアント領域をもとに2サイズにWRCを変更してもらう
+	//クライアント領域をもとに実際のサイズにwrcを変更してもらう
 	AdjustWindowRect(&wrc_, WS_OVERLAPPEDWINDOW, false);
-}
 
-// ウィンドウの生成
-void WinApp::WindowGeneration() 
-{
-	hwnd_ = CreateWindow(
-		wc_.lpszClassName,
-		L"CG2_LE2B_04_ウエキレオ",
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		wrc_.right - wrc_.left,
-		wrc_.bottom - wrc_.top,
-		nullptr,
-		nullptr,
-		wc_.hInstance,
-		nullptr
+	//ウィンドウの生成
+	hwnd_ = CreateWindow
+	(
+		wc_.lpszClassName,		//利用するクラス名
+		Title_,					//タイトルバーの文字(何でも良い)
+		WS_OVERLAPPEDWINDOW,	//よく見るウィンドウスタイル
+		CW_USEDEFAULT,			//表示X座標(Windowsに任せる)
+		CW_USEDEFAULT,			//表示Y座標(WindowsOSに任せる)
+		wrc_.right - wrc_.left,	//ウィンドウ横幅
+		wrc_.bottom - wrc_.top,	//ウィンドウ縦幅
+		nullptr,				//親ウィンドウハンドル
+		nullptr,				//メニューハンドル
+		wc_.hInstance,			//インスタンスハンドル
+		nullptr					//オプション
 	);
-}
 
-void WinApp::DebugLayer()
-{
 #ifdef _DEBUG
-	//debugController_ = nullptr;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) 
+
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_))))
 	{
-		// デバッグレイヤーを有効化する
+		//デバッグレイヤーを有効化する
 		debugController_->EnableDebugLayer();
-		// さらにGPU側でもチェックを行うようにする
+		//さらにGPU側でもチェックを行うようにする
 		debugController_->SetEnableGPUBasedValidation(TRUE);
 	}
 #endif
-}
 
-// Windowsの初期化
-void WinApp::Initialize() 
-{
-	WindowClassRegister();
-	WindowSizeDecide();
-	WindowGeneration();
-	// ウィンドウを表示する
+	if (hwnd_ == nullptr)
+	{
+		return false;
+	}
+
+	//ウィンドウを表示する
 	ShowWindow(hwnd_, SW_SHOW);
+
+	return true;
 }
 
-// 出力ウィンドウに文字を出す
-void WinApp::Log(const std::string& message) 
+void WinApp::End()
 {
-	OutputDebugStringA(message.c_str());
+	//ウィンドウの終了処理
+	EndWindow();
 }
 
-#pragma region メンバ変数
-
-ID3D12Debug1* WinApp::debugController_;
-
-// ウィンドウクラス登録用
-WNDCLASS WinApp::wc_;
-
-RECT WinApp::wrc_;
-
-// ウィンドウを生成
-HWND WinApp::hwnd_;
-
-#pragma endregion
+void WinApp::EndWindow()
+{
+#ifdef _DEBUG
+	if (debugController_ != nullptr)
+	{
+		debugController_->Release();
+	}
+#endif
+}
