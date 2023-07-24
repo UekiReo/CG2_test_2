@@ -50,7 +50,7 @@ public:
 	void CreateScissor();
 
 	// 頂点データの初期化
-	void VariableInitialize();
+	void VertexInitialize();
 
 	// エンジンの初期化
 	void Initialize();

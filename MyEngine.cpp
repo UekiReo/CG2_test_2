@@ -226,7 +226,7 @@ void MyEngine::CreateScissor()
 	scissorRect.bottom = WinApp::kClientHeight_;
 }
 
-void MyEngine::VariableInitialize() 
+void MyEngine::VertexInitialize() 
 {
 	vertexLeft[0] = { -0.2f,0.4f,0.0f,1.0f };
 	vertexTop[0] = { 0.0f,0.8f,0.0f,1.0f };
@@ -288,7 +288,7 @@ void MyEngine::Initialize()
 
 	CreateScissor();
 
-	VariableInitialize();
+	VertexInitialize();
 }
 
 void MyEngine::BeginFrame() 
