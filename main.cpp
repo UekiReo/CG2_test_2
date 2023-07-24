@@ -3,14 +3,7 @@
 #include <cstdint>
 #include <format>
 #include <d3d12.h>
-#include <dxgi1_6.h>
 #include <cassert>
-#pragma comment(lib,"d3d12.lib")
-#pragma comment(lib,"dxgi.lib")
-#include <dxgidebug.h>
-#pragma comment(lib, "dxguid.lib")
-#include <dxcapi.h>
-#pragma comment(lib, "dxcompiler.lib")
 #include "Vector4.h"
 #include "MyEngine.h"
 
