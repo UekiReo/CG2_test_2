@@ -53,7 +53,7 @@ void WinApp::WindowGeneration()
 {
 	hwnd_ = CreateWindow(
 		wc_.lpszClassName,
-		L"CG2_CLASS",
+		L"CG2_LE2B_04_ウエキレオ",
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
