@@ -25,9 +25,8 @@ class MyEngine
 public:
 	/// コンストラクタ
 	MyEngine();
-	/// <summary>
+	
 	/// デストラクタ
-	/// </summary>
 	~MyEngine();
 
 	/// 初期化

@@ -1,5 +1,4 @@
 #include "MyEngine.h"
-#include <assert.h>
 
 MyEngine::MyEngine()
 {
@@ -72,6 +71,7 @@ IDxcBlob* MyEngine::CompileShader
 		L"-Od",			 //最適化をはずしておく
 		L"-Zpr",		 //メモリアウトは行優先
 	};
+
 	//実際にShaderをコンパイルする
 	IDxcResult* shaderResult = nullptr;
 	hr = dxcCompiler->Compile
@@ -118,6 +118,7 @@ void MyEngine::DXCInitialize()
 {
 	hr_ = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
 	assert(SUCCEEDED(hr_));
+
 	hr_ = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
 	assert(SUCCEEDED(hr_));
 
@@ -199,7 +200,6 @@ void MyEngine::ShaderCompile()
 
 void MyEngine::CreatePSO()
 {
-
 	graphicsPipelineStateDesc_.pRootSignature = rootSignature_;	//RootSignature
 	graphicsPipelineStateDesc_.InputLayout = inputLayoutDesc_;	//InputLayout
 	graphicsPipelineStateDesc_.VS = { vertexShaderBlob_->GetBufferPointer(),vertexShaderBlob_->GetBufferSize() };	//VertexShader
@@ -222,7 +222,6 @@ void MyEngine::CreatePSO()
 
 void MyEngine::VertexResource()
 {
-
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
 	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;	//UplodeHeapを使う
@@ -337,12 +336,10 @@ void MyEngine::StateChange()
 	assert(SUCCEEDED(hr_));
 	hr_ = directXCommon_->GetCommandList()->Reset(directXCommon_->GetCommandAllocator(), nullptr);
 	assert(SUCCEEDED(hr_));
-
 }
 
 void MyEngine::Relese()
 {
-
 	vertexResource_->Release();
 	graphicsPipelineState_->Release();
 	signatureBlob_->Release();
