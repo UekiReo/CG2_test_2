@@ -63,7 +63,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 		else
 		{
-			engine->Update();
 
 			for (int i = 0; i < 4; i++)
 			{

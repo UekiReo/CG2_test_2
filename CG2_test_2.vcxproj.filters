@@ -36,7 +36,7 @@
     <ClCompile Include="DirectXCommon.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
-    <ClCompile Include="MyEngine.cpp">
+    <ClCompile Include="MyEQEngine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Triangle.cpp">
@@ -60,7 +60,7 @@
     <ClInclude Include="DirectXCommon.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
-    <ClInclude Include="MyEngine.h">
+    <ClInclude Include="MyEQEngine.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Triangle.h">
