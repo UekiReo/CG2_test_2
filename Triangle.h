@@ -8,14 +8,14 @@ class Triangle
 {
 public:
 	// 初期化
-	void Initialize(DirectXCommon* directXCommon);
+	void Initialize(DirectXCommon* directXCommon, const Vector4& a, const Vector4& b, const Vector4& c);
 
 	// 三角形描画
-	void Draw(const Vector4& a, const Vector4& b, const Vector4& c);
+	void Draw();
 
-	void End();
+	void Finalize();
 
-public:
+private:
 	MyEngine* engine_;
 
 	DirectXCommon* directXCommon_;
@@ -27,7 +27,5 @@ public:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 
 private:
-	// 頂点
 	void SetVertex();
 };
-

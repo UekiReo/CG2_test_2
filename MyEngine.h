@@ -9,7 +9,6 @@
 #include<dxgidebug.h>
 #include<dxcapi.h>
 #include<Vector>
-
 #include"DirectXCommon.h"
 #include"WinApp.h"
 #include"Triangle.h"
@@ -21,7 +20,7 @@
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dxcompiler.lib")
 
-class MyEngine 
+class MyEngine
 {
 public:
 	/// コンストラクタ
@@ -41,10 +40,10 @@ public:
 	void UpdateEnd();
 
 	/// 三角形描画
-	void Draw(const Vector4& a, const Vector4& b, const Vector4& c);
+	//void Draw(const Vector4& a, const Vector4& b, const Vector4& c);
 
 	/// 解放処理
-	void End();
+	void Finalize();
 
 private:
 	//コンパイルシェーダー関数
@@ -164,4 +163,3 @@ private:
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData_;
 };
-

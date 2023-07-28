@@ -7,49 +7,25 @@
 //Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	WinApp* window = new WinApp;
+	WinApp* winApp = new WinApp;
 	DirectXCommon* directXCommon = new DirectXCommon;
 	MyEngine* engine = new MyEngine;
 
 	//アプリケーションの開始
-	window->StartApp();
-	directXCommon->Initialize(window->GetHwnd());
+	winApp->StartApp();
+	directXCommon->Initialize(winApp->GetHwnd());
 	engine->Initialize();
 
-	Vector4 data1[4];
-	Vector4 data2[4];
-	Vector4 data3[4];
+	Vector4 triangleVertexData[10][3];
+	Triangle* triangle[10];
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 10; i++)
 	{
-
-		data1[i] = { -0.2f,-0.2f + (i * 0.5f),0.0f,1.5f };
-		data2[i] = { 0.0f,0.2f + (i * 0.4f),0.0f,1.5f };
-		data3[i] = { 0.2f,-0.2f + (i * 0.5f),0.0f,1.5f };
-	}
-
-	Vector4 data4[3];
-	Vector4 data5[3];
-	Vector4 data6[3];
-
-	for (int i = 0; i < 3; i++)
-	{
-
-		data4[i] = { 0.4f,-0.2f + (i * -0.5f),0.0f,2.0f };
-		data5[i] = { 0.6f,0.2f + (i * -0.5f),0.0f,2.0f };
-		data6[i] = { 0.8f,-0.2f + (i * -0.5f),0.0f,2.0f };
-	}
-
-	Vector4 data7[3];
-	Vector4 data8[3];
-	Vector4 data9[3];
-
-	for (int i = 0; i < 3; i++)
-	{
-
-		data7[i] = { -0.8f,-0.2f + (i * -0.5f),0.0f,2.0f };
-		data8[i] = { -0.6f,0.2f + (i * -0.5f),0.0f,2.0f };
-		data9[i] = { -0.4f,-0.2f + (i * -0.5f),0.0f,2.0f };
+		triangleVertexData[i][0] = { -0.2f,-1.8f + (i * 0.3f),0.0f,2.0f };
+		triangleVertexData[i][1] = { 0.0f,-1.4f + (i * 0.3f),0.0f,2.0f };
+		triangleVertexData[i][2] = { 0.2f,-1.8f + (i * 0.3f),0.0f,2.0f };
+		triangle[i] = new Triangle;
+		triangle[i]->Initialize(directXCommon, triangleVertexData[i][0], triangleVertexData[i][1], triangleVertexData[i][2]);
 	}
 
 	MSG msg{};
@@ -63,32 +39,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 		else
 		{
+			engine->Update();
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 10; i++) 
 			{
 				//三角形描画
-				engine->Draw(data1[i], data2[i], data3[i]);
-			}
-
-			for (int i = 0; i < 3; i++)
-			{
-				//三角形描画
-				engine->Draw(data4[i], data5[i], data6[i]);
-			}
-
-			for (int i = 0; i < 3; i++)
-			{
-				//三角形描画
-				engine->Draw(data7[i], data8[i], data9[i]);
+				triangle[i]->Draw();
 			}
 
 			engine->UpdateEnd();
-
 		}
 	}
 
-	window->EndApp();
-	engine->End();
+	for (int i = 0; i < 10; i++) 
+	{
+		triangle[i]->Finalize();
+	}
+
+	winApp->EndApp();
+	engine->Finalize();
 	directXCommon->PostDraw();
+
 	return 0;
 }
