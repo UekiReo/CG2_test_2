@@ -1,99 +1,131 @@
 #pragma once
-#include <chrono>
-#include <cstdlib>
-#include <dxgi1_6.h>
-#include "WinApp.h"
-#include "String.h"
+#include<d3d12.h>
+#include<dxgi1_6.h>
+#include<cassert>
+#include"ConvertString.h"
+#include<format>
+#include<dxgidebug.h>
+#include"WinApp.h"
 
-class DirectXCommon {
+#pragma comment(lib,"d3d12.lib")
+#pragma comment(lib,"dxgi.lib")
+#pragma comment(lib,"dxguid.lib")
+
+class DirectXCommon
+{
 public:
-	void Initialization(WinApp* win, const wchar_t* title, int32_t backBufferWidth = WinApp::kClientWidth, int32_t backBufferHeight = WinApp::kClientHeight);
+	// コンストラクタ
+	DirectXCommon();
 
+	// デストラクタ
+	~DirectXCommon();
+
+	// メインループ前の初期化
+	void Initialize(HWND hwnd);
+
+	// 描画前の処理
 	void PreDraw();
 
+	// 描画後の処理
 	void PostDraw();
 
-	static inline void ClearRenderTarget();
+	// getter
+	ID3D12Device* GetDevice() const { return device_; }
+	ID3D12GraphicsCommandList* GetCommandList()const { return  commandList_; };
+	//スワップチェーン
+	IDXGISwapChain4* GetSwapChain()const { return swapChain_; };
+	ID3D12Resource* GetSwapChainResource(int index)const { return swapChainResources_[index]; };
+	D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandle(int index)const
+	{
+		assert(index >= 0 && index < 2);
+		return rtvHandles_[index];
+	}
+	//コマンドキュー
+	ID3D12CommandQueue* GetCommandQueue()const { return commandQueue_; };
+	//コマンドアロケータ
+	ID3D12CommandAllocator* GetCommandAllocator()const { return commandAllocator_; };
+	//初期値0でFenceを作る
+	ID3D12Fence* GetFence()const { return fence_; };
+	//フェンス値
+	uint64_t GetFenceValue()const { return fenceValue_; };
+	HANDLE GetFenceEvent() { return fenceEvent_; };
 
-	static void Finalize();
-
-	HRESULT GetHr() { return  hr_; }
-
-	void SetHr(HRESULT a) { this->hr_ = a; }
-
-	ID3D12Device* GetDevice() { return device_; }
-
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList_; }
+	// setter
 
 private:
-	static WinApp* winApp_;
+	// ウィンドウ関連の管理
+	WinApp winApp_;
+	HWND hwnd_;
+
+	// DXGIファクトリーの生成
+	IDXGIFactory7* dxgiFactory = nullptr;
+
+	// 使用するアダプタ用の変数。
+	IDXGIAdapter4* useAdapter = nullptr;
+
+	// ディスクリプタヒープ
+	ID3D12DescriptorHeap* rtvdescriptorHeap = nullptr;
+
+	// RTVの設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+
+	HRESULT hr_;
+
+	// デバイスの生成
+	static ID3D12Device* device_;
+
+	// コマンドリスト
+	static ID3D12GraphicsCommandList* commandList_;
+
+	// スワップチェーン
+	static IDXGISwapChain4* swapChain_;
+
+	// SwapChainからResourceを引っ張ってくる
+	static ID3D12Resource* swapChainResources_[2];
+
+	// RTVを二つ作るのでディスクリプタを二つ用意
+	static D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
+
+	// コマンドキュー
+	static ID3D12CommandQueue* commandQueue_;
+
+	// コマンドアロケータ
+	static ID3D12CommandAllocator* commandAllocator_;
+
+	// 初期値0でFenceを作る
+	static ID3D12Fence* fence_;
+
+	// フェンス値
+	uint64_t fenceValue_;
+
+	// フェンスイベント
+	HANDLE fenceEvent_;
 
 	//DXGIファクトリーの生成
-	static IDXGIFactory7* dxgiFactory_;
-	//
-
-	//使用するアダプタ用の変数
-	static IDXGIAdapter4* useAdapter_;
-	//
-
-	//D3D12Deviceの生成
-	static	ID3D12Device* device_;
-	//
-
-	//コマンドキュー生成
-	static ID3D12CommandQueue* commandQueue_;
-	//
-
-	//コマンドアロケータの生成
-	static ID3D12CommandAllocator* commandAllocator_;
-	//
-
-	//コマンドリストを生成する
-	static ID3D12GraphicsCommandList* commandList_;
-	//
-
-	//スワップチェーン
-	static IDXGISwapChain4* swapChain_;
-	//
-
-	//ディスクリプタヒープの生成
-	static ID3D12DescriptorHeap* rtvDescriptorHeap_;
-	//
-
-	//RTVを２つ作るのでディスクリプタを２つ用意
-	static	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
-	static	ID3D12Resource* swapChainResources_[2];
-	//
-
-	//Fence
-	static ID3D12Fence* fence_;
-	static UINT64 fenceValue_;
-	static HANDLE fenceEvent_;
-	//
-
-	//buffer
-	static	int32_t backBufferWidth_;
-	static	int32_t backBufferHeight_;
-	//
-
-	//barrier
-	static	inline D3D12_RESOURCE_BARRIER barrier_{};
-	//
-
-	//hr
-	static HRESULT hr_;
-	//
-
-private:
 	void InitializeDXGIDevice();
-
-	void CreateSwapChain();
-
+	// コマンド関連初期化
 	void InitializeCommand();
 
+	// スワップチェーンの生成
+	void CreateSwapChain();
+
+	// レンダーターゲット生成
 	void CreateFinalRenderTargets();
 
+	//スワップチェーンからもってくる
+	void PullResourceSwapChain();
+
+	//RTV作成
+	void CreateRTV();
+
+	// フェンス生成
 	void CreateFence();
+
+	//コマンドのキック
+	void CommandKick();
+
+	//解放
+	void Relese();
 };
 
 

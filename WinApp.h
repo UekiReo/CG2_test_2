@@ -1,36 +1,53 @@
 #pragma once
-#include <Windows.h>
-#include <cstdint>
-#include <d3d12.h>
-#pragma comment(lib,"d3d12.lib")
+#include <windows.h>
+#include<cstdint>
+#include<d3d12.h>
+#include<dxgidebug.h>
 
-class WinApp {
+#pragma comment(lib,"dxguid.lib")
+
+class WinApp
+{
 public:
-	//クライアント領域サイズ
-	static const int32_t kClientWidth = 1280;
-	static const int32_t kClientHeight = 720;
+	//コンストラクタ
+	WinApp();
+	//デストラクタ
+	~WinApp();
+	//アプリケーションの開始
+	void StartApp();
+	//アプリケーションの終了
+	void EndApp();
 
-	HINSTANCE GetHInstance()const { return wc_.hInstance; }
-
-	static	bool Procesmessage();
-	static void Finalize();
-
-	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
-	static ID3D12Debug1* GetdebugController() { return debugController_; }
-
-	static inline HWND GetHwnd() { return hwnd_; }
-
-	static void CreateWindowView(const wchar_t* title, int32_t clientWidth, int32_t clientheight);
+	int32_t GetWidth() const { return Width_; };
+	int32_t GetHeight() const { return Height_; };
+	HWND GetHwnd() const { return hwnd_; }
 
 private:
-	static	UINT windowStyle_;
+	const wchar_t* Title_;  // タイトル
+	HINSTANCE hInst_;	// インスタンスハンドル
+	HWND hwnd_;			// ウィンドウハンドル
+	int32_t Width_;		// ウィンドウの横幅
+	int32_t Height_;	// ウィンドウの縦幅
 
-	static ID3D12Debug1* debugController_;
+	RECT wrc_;
 
-	static	inline 	RECT wrc_ = { 0,0,kClientWidth,kClientHeight };
+	// ウィンドウクラスの登録
+	WNDCLASS wc_;
 
-	static inline	WNDCLASS wc_{};// ウィンドウクラス
+	ID3D12Debug1* debugController_ = nullptr;
 
-	static	HWND hwnd_;
+	// 初期化
+	bool Initialize();
+
+	// アプリケーションの終了
+	void End();
+
+	// ウィンドウクラスを登録
+	bool WindowClassRegister();
+
+	// ウィンドウの終了
+	void EndWindow();
+
+	// ウィンドウプロシージャ
+	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 };
