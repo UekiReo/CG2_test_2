@@ -90,7 +90,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="MyEQEngine.cpp" />
+    <ClCompile Include="MyEngine.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
     <ClCompile Include="main.cpp" />
@@ -112,7 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyEQEngine.h" />
+    <ClInclude Include="MyEngine.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="DirectXCommon.h" />
     <ClInclude Include="ConvertString.h" />
