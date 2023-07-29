@@ -1,13 +1,13 @@
-﻿#pragma once
+#pragma once
 #include "DirectXCommon.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include "MatrixCalculation.h"
 
+class MyEngine;
 
-class CreateEngine;
-
-class CreateTriangle {
+class Triangle
+{
 public:
 	void Initialize(DirectXCommon* dxCommon);
 
@@ -23,7 +23,7 @@ private:
 	void MoveMatrix();
 
 private:
-	CreateEngine* Engine_;
+	MyEngine* Engine_;
 
 	DirectXCommon* dxCommon_;
 

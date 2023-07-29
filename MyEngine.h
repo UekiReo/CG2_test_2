@@ -1,14 +1,13 @@
-﻿#pragma once
+#pragma once
 #include "DirectXCommon.h"
 #include <dxcapi.h>
 #include "Vector3.h"
 #include "Vector4.h"
-#include "CreateTriangle.h"
+#include "Triangle.h"
 #include "MatrixCalculation.h"
 #pragma comment(lib,"dxcompiler.lib")
 
-class CreateEngine 
-{
+class MyEngine {
 public:
 	void Initialize();
 
@@ -28,7 +27,7 @@ private:
 	static WinApp* win_;
 	static	DirectXCommon* dxCommon_;
 
-	CreateTriangle* triangle_[11];
+	Triangle* triangle_[11];
 
 	int triangleCount_;
 
