@@ -138,7 +138,6 @@ void MyEngine::RasterizerState()
 		L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(vertexShaderBlob_ != nullptr);
 
-
 	pixelShaderBlob_ = CompileShader(L"Object3d.PS.hlsl",
 		L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(pixelShaderBlob_ != nullptr);
@@ -249,14 +248,19 @@ void MyEngine::EndFrame()
 
 void MyEngine::Finalize()
 {
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < 11; i++) 
+	{
 		triangle_[i]->Finalize();
 	}
+
 	graphicsPipelineState_->Release();
 	signatureBlob_->Release();
-	if (errorBlob_) {
+
+	if (errorBlob_)
+	{
 		errorBlob_->Release();
 	}
+
 	rootSignature_->Release();
 	pixelShaderBlob_->Release();
 	vertexShaderBlob_->Release();

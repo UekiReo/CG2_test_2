@@ -7,7 +7,8 @@
 #include "MatrixCalculation.h"
 #pragma comment(lib,"dxcompiler.lib")
 
-class MyEngine {
+class MyEngine 
+{
 public:
 	void Initialize();
 
