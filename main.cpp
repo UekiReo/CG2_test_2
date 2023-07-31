@@ -14,14 +14,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Engine->Initialize();
 	Vector4 triangleVertexData[10][3];
 	Vector4 material[10] = {};
-	float materialColor[4] = { material[10].x,material[10].y,material[10].z,material[10].w };
+	float materialColor[3] = { material[10].x,material[10].y,material[10].z};
 
 	for (int i = 0; i < 10; i++)
 	{
 		triangleVertexData[i][0] = { -0.2f,-1.8f + (i * 0.3f),0.0f,2.0f };
 		triangleVertexData[i][1] = { 0.0f,-1.4f + (i * 0.3f),0.0f,2.0f };
 		triangleVertexData[i][2] = { 0.2f,-1.8f + (i * 0.3f),0.0f,2.0f };
-		material[i] = { material[i].x,material[i].y,material[i].z,material[i].w };
+		material[i] = { material[i].x,material[i].y,material[i].z};
 	}
 
 	while (true) 
@@ -37,7 +37,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		Engine->Update();
 
 		ImGui::Begin("Material");
-		ImGui::ColorEdit4("MaterialColor", materialColor);
+		ImGui::ColorEdit3("MaterialColor", materialColor);
 		ImGui::End();
 
 		for (int i = 0; i < 10; i++)
@@ -45,7 +45,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			material[i].x = materialColor[0];
 			material[i].y = materialColor[1];
 			material[i].z = materialColor[2];
-			material[i].w = materialColor[3];
 		}
 
 		//三角形描画
