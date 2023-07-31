@@ -36,8 +36,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		Engine->Update();
 
-		ImGui::Begin("Material");
-		ImGui::ColorEdit3("MaterialColor", materialColor);
+		ImGui::Begin("Triangle");
+		ImGui::ColorEdit3("Color", materialColor);
 		ImGui::End();
 
 		for (int i = 0; i < 10; i++)
