@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	engine->Initialize();
 
-	/*engine->LoadTexture("resource/uvChecker.png");*/
+	engine->LoadTexture("resource/uvChecker.png");
 
 	Vector4 triangleVertexData[3][3];
 	Vector4 material[3] = { { 1,1,1,1 },{ 1,1,1,1 },{ 1,1,1,1 } };
