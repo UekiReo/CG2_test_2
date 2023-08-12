@@ -6,23 +6,43 @@ const wchar_t kWindowTitle[] = { L"CG2_LE2B_04_ウエキレオ" };
 //Windowsアプリでのエントリーポイント
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) 
 {
+	//COMの初期化
+	CoInitializeEx(0, COINIT_MULTITHREADED);
+
 	//初期化
 	WinApp* win_ = nullptr;
-	MyEngine* Engine = new MyEngine;
-	Engine->Initialization(win_, kWindowTitle, 1280, 720);
+	MyEngine* engine = new MyEngine;
+	engine->Initialization(win_, kWindowTitle, 1280, 720);
 
-	Engine->Initialize();
-	Vector4 triangleVertexData[10][3];
-	Vector4 material[10] = {};
-	float materialColor[3] = { material[10].x,material[10].y,material[10].z};
+	engine->Initialize();
 
-	for (int i = 0; i < 10; i++)
-	{
-		triangleVertexData[i][0] = { -0.2f,-1.8f + (i * 0.3f),0.0f,2.0f };
-		triangleVertexData[i][1] = { 0.0f,-1.4f + (i * 0.3f),0.0f,2.0f };
-		triangleVertexData[i][2] = { 0.2f,-1.8f + (i * 0.3f),0.0f,2.0f };
-		material[i] = { material[i].x,material[i].y,material[i].z};
-	}
+	/*engine->LoadTexture("resource/uvChecker.png");*/
+
+	Vector4 triangleVertexData[3][3];
+	Vector4 material[3] = { { 1,1,1,1 },{ 1,1,1,1 },{ 1,1,1,1 } };
+	float materialColor0[3] = { material[0].x,material[0].y,material[0].z };
+	float materialColor1[3] = { material[1].x,material[1].y,material[1].z };
+	float materialColor2[3] = { material[2].x,material[2].y,material[2].z };
+
+	// 左端
+	triangleVertexData[0][0] = { -0.8f,-0.2f,0.0f,1.0f };
+	triangleVertexData[0][1] = { -0.6f,0.2f,0.0f,1.0f };
+	triangleVertexData[0][2] = { -0.4f,-0.2f,0.0f,1.0f };
+	material[0] = { material[0].x,material[0].y,material[0].w,1.0f };
+
+	// 真ん中
+	triangleVertexData[1][0] = { -0.2f,0.4f,0.0f,1.0f };
+	triangleVertexData[1][1] = { 0.0f,0.8f,0.0f,1.0f };
+	triangleVertexData[1][2] = { 0.2f,0.4f,0.0f,1.0f };
+	material[1] = { material[1].x,material[1].y,material[1].w,1.0f };
+
+	// 右端
+	triangleVertexData[2][0] = { 0.4f,-0.2f,0.0f,1.0f };
+	triangleVertexData[2][1] = { 0.6f,0.2f,0.0f,1.0f };
+	triangleVertexData[2][2] = { 0.8f,-0.2f,0.0f,1.0f };
+	material[2] = { material[2].x,material[2].y,material[2].w,1.0f };
+
+	MSG msg{};
 
 	while (true) 
 	{
@@ -32,32 +52,41 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 		//ゲームの処理
-		Engine->BeginFrame();
+		engine->Update();
 
-		Engine->Update();
+		engine->BeginFrame();
 
-		ImGui::Begin("Triangle");
-		ImGui::ColorEdit3("Color", materialColor);
+		ImGui::Begin("Color");
+		ImGui::ColorEdit3("Color", materialColor0);
+		ImGui::ColorEdit3("Color2", materialColor1);
+		ImGui::ColorEdit3("Color3", materialColor2);
 		ImGui::End();
 
-		for (int i = 0; i < 10; i++)
+		material[0].x = materialColor0[0];
+		material[0].y = materialColor0[1];
+		material[0].z = materialColor0[2];
+
+		material[1].x = materialColor1[0];
+		material[1].y = materialColor1[1];
+		material[1].z = materialColor1[2];
+
+		material[2].x = materialColor2[0];
+		material[2].y = materialColor2[1];
+		material[2].z = materialColor2[2];
+
+		for (int i = 0; i < 3; i++)
 		{
-			material[i].x = materialColor[0];
-			material[i].y = materialColor[1];
-			material[i].z = materialColor[2];
+			//三角形描画
+			engine->DrawTriangle(triangleVertexData[i][0], triangleVertexData[i][1], triangleVertexData[i][2], material[i]);
 		}
 
-		//三角形描画
-		for (int i = 0; i < 10; i++)
-		{
-			Engine->DrawTriangle(triangleVertexData[i][0], triangleVertexData[i][1], triangleVertexData[i][2], material[i]);
-		}
-
-		Engine->EndFrame();
+		engine->EndFrame();
 	}
 
 	//解放処理
-	Engine->Finalize();
+	engine->Finalize();
+
+	CoUninitialize();
 
 	return 0;
 }
