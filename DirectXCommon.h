@@ -5,23 +5,41 @@
 #include "WinApp.h"
 #include "ConvertString.h"
 
-class DirectXCommon 
+class DirectXCommon
 {
 public:
 	void Initialization(WinApp* win, const wchar_t* title, int32_t backBufferWidth = WinApp::kClientWidth, int32_t backBufferHeight = WinApp::kClientHeight);
 
-	static void ImGuiInitialize();
-
 	void PreDraw();
+
 	void PostDraw();
 
 	static inline void ClearRenderTarget();
-	static void Finalize();
 
-	HRESULT GetHr() { return  hr_; }
+	static void Release();
+
+	HRESULT GetHr() { return hr_; }
+
 	void SetHr(HRESULT a) { this->hr_ = a; }
+
 	ID3D12Device* GetDevice() { return device_; }
+
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList_; }
+
+	static void ImGuiInitialize();
+
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap_; }
+
+private:
+	void InitializeDXGIDevice();
+
+	void InitializeCommand();
+
+	void CreateSwapChain();
+
+	void CreateFinalRenderTargets();
+
+	void CreateFence();
 
 private:
 	static WinApp* winApp_;
@@ -51,8 +69,8 @@ private:
 	//ディスクリプタヒープの生成
 	static ID3D12DescriptorHeap* rtvDescriptorHeap_;
 	static D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_;
-	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
+	// SRV
 	static ID3D12DescriptorHeap* srvDescriptorHeap_;
 
 	//RTVを２つ作るのでディスクリプタを２つ用意
@@ -71,15 +89,6 @@ private:
 
 	static HRESULT hr_;
 
-private:
-	void InitializeDXGIDevice();
-
-	void CreateSwapChain();
-
-	void InitializeCommand();
-
-	void CreateFinalRenderTargets();
-
-	void CreateFence();
+	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 };
 
