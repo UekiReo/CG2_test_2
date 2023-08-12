@@ -73,6 +73,8 @@ private:
 	// SRV
 	static ID3D12DescriptorHeap* srvDescriptorHeap_;
 
+	static inline ID3D12DescriptorHeap* dsvDescriptorHeap_;
+
 	//RTVを２つ作るのでディスクリプタを２つ用意
 	static	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
 	static	ID3D12Resource* swapChainResources_[2];
@@ -90,5 +92,10 @@ private:
 	static HRESULT hr_;
 
 	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
+
+	ID3D12Resource* CreateDepthStencilTextureResource(int32_t width, int32_t height);
+
+	//深度リソース
+	static inline ID3D12Resource* depthStencilResource_;
 };
 
