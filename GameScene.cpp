@@ -42,7 +42,7 @@ void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon)
 	sphere_ = new Sphere();
 	sphere_->Initialize(dxCommon_, engine_);
 
-	engine_->SettingTexture("resource/uvChecker.png");
+	engine_->SettingTexture("resources/uvChecker.png");
 
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 }
