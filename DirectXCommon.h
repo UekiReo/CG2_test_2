@@ -6,8 +6,7 @@
 #include "ConvertString.h"
 #include "externals/DirectXTex/DirectXTex.h"
 
-class DirectXCommon
-{
+class DirectXCommon {
 public:
 	void Initialization(WinApp* win, const wchar_t* title, int32_t backBufferWidth = WinApp::kClientWidth, int32_t backBufferHeight = WinApp::kClientHeight);
 
@@ -27,9 +26,7 @@ public:
 	void SetHr(HRESULT a) { this->hr_ = a; }
 	
 	ID3D12Device* GetDevice() { return device_; }
-	
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList_; }
-	
 	ID3D12DescriptorHeap* GetSrvDescriptiorHeap() { return srvDescriptorHeap_; }
 
 private:
@@ -73,13 +70,11 @@ private:
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_;
 
 	//ディスクリプタヒープの生成
-	//rtv用
-	ID3D12DescriptorHeap* rtvDescriptorHeap_;
+	ID3D12DescriptorHeap* rtvDescriptorHeap_;//rtv用
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_;
 	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
-	//srv用
-	ID3D12DescriptorHeap* srvDescriptorHeap_;
+	ID3D12DescriptorHeap* srvDescriptorHeap_;//srv用
 
 	//RTVを２つ作るのでディスクリプタを２つ用意
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
@@ -90,18 +85,14 @@ private:
 	UINT64 fenceValue_;
 	HANDLE fenceEvent_;
 
-	//バックバッファ
 	int32_t backBufferWidth_;
 	int32_t backBufferHeight_;
 
-	//バリア
 	D3D12_RESOURCE_BARRIER barrier_{};
 
 	HRESULT hr_;
 
-	//深度リソース
 	ID3D12Resource* depthStencilResource_;
 	ID3D12DescriptorHeap* dsvDescriptorHeap_;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvhandle_;
 };
-

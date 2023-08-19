@@ -1,16 +1,16 @@
 #pragma once
 #include "DirectXCommon.h"
 #include <dxcapi.h>
+#include "Vector2.h"
 #include "Vector3.h"
-#include"Vector4.h"
+#include "Vector4.h"
+#include "VertexData.h"
 #include "Triangle.h"
 #include "MatrixCalculation.h"
 #include "ConvertString.h"
-#include "VertexData.h"
 #pragma comment(lib,"dxcompiler.lib")
 
-
-class MyEngine 
+class MyEngine
 {
 public:
 	void Initialize(WinApp* win, const wchar_t* title, int32_t width, int32_t height);

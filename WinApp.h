@@ -10,7 +10,7 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-class WinApp 
+class WinApp
 {
 public:
 	//クライアント領域サイズ
@@ -33,8 +33,7 @@ private:
 
 	static ID3D12Debug1* debugController_;
 
-	//ウィンドウクラス
-	static inline WNDCLASS wc_{};
+	static inline WNDCLASS wc_{};//ウィンドウクラス
 
 	static HWND hwnd_;
 };

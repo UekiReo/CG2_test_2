@@ -1,4 +1,4 @@
-#include "Sprite.h"
+﻿#include "Sprite.h"
 
 void Sprite::Initialize(DirectXCommon* dxCommon, MyEngine* engine)
 {

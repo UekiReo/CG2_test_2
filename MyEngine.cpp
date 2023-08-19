@@ -43,6 +43,7 @@ IDxcBlob* MyEngine::CompileShader(const std::wstring& filePath, const wchar_t* p
 	//警告・エラーが出たらログに出して止める
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+	
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0)
 	{
 		Log(shaderError->GetStringPointer());
@@ -130,7 +131,7 @@ void MyEngine::CreateRootSignature()
 	HRESULT hr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
-	
+
 	if (FAILED(dxCommon_->GetHr())) 
 	{
 		Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
@@ -160,14 +161,14 @@ void MyEngine::CreateInputlayOut()
 	inputLayoutDesc_.NumElements = _countof(inputElementDescs_);
 }
 
-void MyEngine::BlendState() 
+void MyEngine::BlendState()
 {
 	//すべての色要素を書き込む
 	blendDesc_.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
 }
 
-void MyEngine::RasterizerState() 
+void MyEngine::RasterizerState()
 {
 	//裏面（時計回り）を表示しない
 	rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
@@ -186,7 +187,7 @@ void MyEngine::RasterizerState()
 	assert(pixelShaderBlob_ != nullptr);
 }
 
-void MyEngine::InitializePSO() 
+void MyEngine::InitializePSO()
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature_;//RootSignature
@@ -230,7 +231,7 @@ void MyEngine::ViewPort()
 	viewport_.MaxDepth = 1.0f;
 }
 
-void MyEngine::ScissorRect() 
+void MyEngine::ScissorRect()
 {
 	//シザー短形
 	scissorRect_.left = 0;
@@ -242,20 +243,16 @@ void MyEngine::ScissorRect()
 void MyEngine::SettingDepth() 
 {
 	//DepthStencilStateの設定
-	//有効化
-	depthStencilDesc_.DepthEnable = true;
-
-	//書き込み
-	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-
-	//比較関数、近ければ描画される
-	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	depthStencilDesc_.DepthEnable = true;//有効化
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;//書き込み
+	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;//比較関数、近ければ描画される
 }
 
-void MyEngine::Initialize(WinApp* win, const wchar_t* title, int32_t width, int32_t height) 
+void MyEngine::Initialize(WinApp* win, const wchar_t* title, int32_t width, int32_t height)
 {
 	win_ = win;
 	win_ = new WinApp();
+	
 	dxCommon_ = new DirectXCommon();
 	dxCommon_->Initialization(win, title, win->kClientWidth, win->kClientHeight);
 
@@ -279,22 +276,27 @@ void MyEngine::Initialize(WinApp* win, const wchar_t* title, int32_t width, int3
 }
 
 
-void MyEngine::BeginFrame() 
+void MyEngine::BeginFrame()
 {
 	dxCommon_->PreDraw();
+	
 	//viewportを設定
 	dxCommon_->GetCommandList()->RSSetViewports(1, &viewport_);
+
 	//scirssorを設定
 	dxCommon_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);
+	
 	//RootSignatureを設定。PS0とは別途設定が必要
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_);
+	
 	//PS0を設定
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_);
+	
 	//開発用UIの処理
 	ImGui::ShowDemoWindow();
 }
 
-void MyEngine::EndFrame() 
+void MyEngine::EndFrame()
 {
 	//内部コマンドを生成する
 	ImGui::Render();
@@ -308,7 +310,7 @@ void MyEngine::Finalize()
 	graphicsPipelineState_->Release();
 	signatureBlob_->Release();
 	
-	if (errorBlob_) 
+	if (errorBlob_)
 	{
 		errorBlob_->Release();
 	}
@@ -321,7 +323,7 @@ void MyEngine::Finalize()
 
 void MyEngine::Update() {}
 
-DirectX::ScratchImage MyEngine::LoadTexture(const std::string& filePath)
+DirectX::ScratchImage MyEngine::LoadTexture(const std::string& filePath) 
 {
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
@@ -367,15 +369,15 @@ ID3D12Resource* MyEngine::CreateTextureResource(ID3D12Device* device, const Dire
 		IID_PPV_ARGS(&resource));
 
 	assert(SUCCEEDED(hr));
-	
+
 	return resource;
 }
 
-void MyEngine::UploadtextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages)
+void MyEngine::UploadtextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages) 
 {
 	//meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	for (size_t miplevel = 0; miplevel < metadata.mipLevels; ++miplevel) 
+	for (size_t miplevel = 0; miplevel < metadata.mipLevels; ++miplevel)
 	{
 		const DirectX::Image* img = mipImages.GetImage(miplevel, 0, 0);
 		HRESULT hr = texture->WriteToSubresource(
@@ -385,11 +387,12 @@ void MyEngine::UploadtextureData(ID3D12Resource* texture, const DirectX::Scratch
 			UINT(img->rowPitch),
 			UINT(img->slicePitch)
 		);
+
 		assert(SUCCEEDED(hr));
 	}
 }
 
-void MyEngine::SettingTexture(const std::string& filePath) 
+void MyEngine::SettingTexture(const std::string& filePath)
 {
 	DirectX::ScratchImage mipImage = LoadTexture(filePath);
 	const DirectX::TexMetadata& metadata = mipImage.GetMetadata();

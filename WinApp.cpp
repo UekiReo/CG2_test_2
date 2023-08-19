@@ -1,7 +1,7 @@
 #include "WinApp.h"
 
 //ウィンドウプロシージャ
-LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 	{
@@ -9,7 +9,8 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 	
 	//メッセージに応じてゲーム固有の処理を行う
-	switch (msg) {
+	switch (msg) 
+	{
 		//ウィンドウが破棄された
 	case WM_DESTROY:
 		// OSに対して、アプリの終了を伝える
@@ -21,7 +22,7 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void WinApp::CreateWindowView(const wchar_t* title, int32_t clientWidth, int32_t clientheight)
+void WinApp::CreateWindowView(const wchar_t* title, int32_t clientWidth, int32_t clientheight) 
 {
 	//ウィンドウプロシージャ
 	wc_.lpfnWndProc = WindowProc;
@@ -58,7 +59,8 @@ void WinApp::CreateWindowView(const wchar_t* title, int32_t clientWidth, int32_t
 
 #ifdef _DEBUG//デバッグレイヤー
 	debugController_ = nullptr;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_))))
+	{
 		//デバッグレイヤーを有効化
 		debugController_->EnableDebugLayer();
 		//GPU側でもチェックを行う
@@ -79,12 +81,12 @@ bool WinApp::Procesmessage()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
+	
 	if (msg.message == WM_QUIT) // 終了メッセージが来たらループを抜ける
 	{
 		return true;
 	}
-
+	
 	return false;
 }
 

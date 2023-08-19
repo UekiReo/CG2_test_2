@@ -25,19 +25,7 @@ void Triangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, const 
 	vertexData_[2].position = c;
 	vertexData_[2].texcoord = { 1.0f,1.0f };
 
-	//追加
-	/*vertexData_[3].position = { -0.5f,-0.3f,0.3f,1.0f };
-	vertexData_[3].texcoord = { 0.0f,1.0f };
-
-	vertexData_[4].position = { 0.0f,0.0f,0.0f,1.0f };
-	vertexData_[4].texcoord = { 0.5f,0.0f };
-
-	vertexData_[5].position = { 0.5f,-0.3f,-0.3f,1.0f };
-	vertexData_[5].texcoord = { 1.0f,1.0f };*/
-
-	//マテリアル
 	*materialData_ = material;
-	
 	*wvpData_ = wvpdata;
 
 	//VBVを設定
@@ -67,12 +55,16 @@ void Triangle::Finalize()
 void Triangle::SettingVertex() 
 {
 	vertexResource_ = dxCommon_->CreateBufferResource(dxCommon_->GetDevice(), sizeof(VertexData) * 3);
+	
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+	
 	//使用するリソースのサイズは頂点3つ分のサイズ
 	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 3;
+	
 	//1頂点当たりのサイズ
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+	
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 }
@@ -81,6 +73,7 @@ void Triangle::SettingColor()
 {
 	//マテリアル用のリソースを作る　今回はcolor1つ分
 	materialResource_ = dxCommon_->CreateBufferResource(dxCommon_->GetDevice(), sizeof(Vector4));
+
 	//書き込むためのアドレスを取得
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }

@@ -12,6 +12,7 @@
 
 void DirectXCommon::Initialization(WinApp* win, const wchar_t* title, int32_t backBufferWidth, int32_t backBufferHeight) 
 {
+
 	winApp_ = win;
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
@@ -52,7 +53,7 @@ void DirectXCommon::ImGuiInitialize()
 		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
 }
 
-void DirectXCommon::InitializeDXGIDevice() 
+void DirectXCommon::InitializeDXGIDevice()
 {
 	//DXGIファクトリーの生成
 	dxgiFactory_ = nullptr;
@@ -65,14 +66,16 @@ void DirectXCommon::InitializeDXGIDevice()
 	//順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory_->EnumAdapterByGpuPreference(i,
 		DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter_)) !=
-		DXGI_ERROR_NOT_FOUND; i++) {
+		DXGI_ERROR_NOT_FOUND; i++) 
+	{
 		//アダプター情報の取得
 		DXGI_ADAPTER_DESC3 adapterDesc{};
 		hr_ = useAdapter_->GetDesc3(&adapterDesc);
 		assert(SUCCEEDED(hr_));
 
 		//ソフトウェアアダプタでなければ採用
-		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
+		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE))
+		{
 			//採用アダプタの情報をログに出力
 			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 			break;
@@ -97,7 +100,7 @@ void DirectXCommon::InitializeDXGIDevice()
 		//採用したアダプターでデバイス生成
 		hr_ = D3D12CreateDevice(useAdapter_, featureLevels[i], IID_PPV_ARGS(&device_));
 		//指定した機能レベルのデバイス生成に成功したか確認
-		if (SUCCEEDED(hr_))
+		if (SUCCEEDED(hr_)) 
 		{
 			//生成できたのでログ出力をしてループ抜け
 			Log(std::format("FeatureLevel : {}\n", featureLevelString[i]));
@@ -112,7 +115,7 @@ void DirectXCommon::InitializeDXGIDevice()
 #ifdef _DEBUG
 	ID3D12InfoQueue* infoQueue = nullptr;
 	
-	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) 
+	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue))))
 	{
 		//ヤバイエラーで止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
@@ -145,7 +148,7 @@ void DirectXCommon::InitializeDXGIDevice()
 #endif // _DEBUG
 }
 
-void DirectXCommon::InitializeCommand() 
+void DirectXCommon::InitializeCommand()
 {
 	commandQueue_ = nullptr;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
@@ -208,12 +211,14 @@ ID3D12DescriptorHeap* DirectXCommon::CreateDescriptorHeap(ID3D12Device* device, 
 	descriptionHeapDesc.NumDescriptors = numDescriptors;//ダブルバッファ用に二つ。多くても別にかまわない
 	descriptionHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	HRESULT hr = device_->CreateDescriptorHeap(&descriptionHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	
 	//ディスクリプタヒープが生成失敗の為、起動しない
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
 }
 
-void DirectXCommon::CreateFinalRenderTargets() {
+void DirectXCommon::CreateFinalRenderTargets()
+{
 	//RTVの設定
 	rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;//出力結果をSRGBに変換して書き込む
 	rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;//2Dテクスチャとして書き込む
@@ -232,7 +237,7 @@ void DirectXCommon::CreateFinalRenderTargets() {
 	device_->CreateRenderTargetView(swapChainResources_[1], &rtvDesc_, rtvHandles_[1]);
 }
 
-void DirectXCommon::CreateFence() 
+void DirectXCommon::CreateFence()
 {
 	//初期値0でFenceを作る
 	fence_ = nullptr;
@@ -274,7 +279,7 @@ void DirectXCommon::PreDraw()
 	
 	//描画先のRTVを設定する
 	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, nullptr);
-
+	
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };//青っぽい色、RGBA順
 	commandList_->ClearRenderTargetView(rtvHandles_[backBufferIndex], clearColor, 0, nullptr);
@@ -288,7 +293,7 @@ void DirectXCommon::PreDraw()
 	commandList_->ClearDepthStencilView(dsvhandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void DirectXCommon::PostDraw() 
+void DirectXCommon::PostDraw()
 {
 	hr_;
 	
@@ -318,8 +323,7 @@ void DirectXCommon::PostDraw()
 	//GPUがここまで辿り着いた時、Fenceの値を指定した値に代入するようにsignalを送る
 	commandQueue_->Signal(fence_, fenceValue_);
 
-	if (fence_->GetCompletedValue() < fenceValue_
-		) {
+	if (fence_->GetCompletedValue() < fenceValue_) {
 		//指定したSignalにたどり着いていないので、たどり着くまで待つようにイベントを設定する
 		fence_->SetEventOnCompletion(fenceValue_, fenceEvent_);
 		
@@ -334,10 +338,10 @@ void DirectXCommon::PostDraw()
 	assert(SUCCEEDED(hr_));
 }
 
-void DirectXCommon::ClearRenderTarget() 
+void DirectXCommon::ClearRenderTarget()
 {
 	UINT backBufferIndex = swapChain_->GetCurrentBackBufferIndex();
-	
+
 	//描画先のRTVを設定する
 	commandList_->OMSetRenderTargets(1, &rtvHandles_[backBufferIndex], false, nullptr);
 	
@@ -379,7 +383,7 @@ ID3D12Resource* DirectXCommon::CreateBufferResource(ID3D12Device* device, size_t
 	return Resource;
 }
 
-ID3D12Resource* DirectXCommon::CreateDepthStenciltextureResource(ID3D12Device* device, int32_t width, int32_t height) 
+ID3D12Resource* DirectXCommon::CreateDepthStenciltextureResource(ID3D12Device* device, int32_t width, int32_t height)
 {
 	//生成するresourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
@@ -414,18 +418,14 @@ ID3D12Resource* DirectXCommon::CreateDepthStenciltextureResource(ID3D12Device* d
 	return resource;
 }
 
-void DirectXCommon::CreateDepthStensil()
+void DirectXCommon::CreateDepthStensil() 
 {
 	depthStencilResource_ = CreateDepthStenciltextureResource(device_, WinApp::kClientWidth, WinApp::kClientHeight);
 	dsvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvdesc{};
-
-	//Format、基本的にresourceに合わせる
-	dsvdesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	//2dTexture
-	dsvdesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsvdesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;//Format、基本的にresourceに合わせる
+	dsvdesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;//2dTexture
 
 	device_->CreateDepthStencilView(depthStencilResource_,
 		&dsvdesc,
@@ -449,21 +449,13 @@ void DirectXCommon::Finalize()
 	swapChain_->Release();
 	
 	commandList_->Release();
-	
 	commandAllocator_->Release();
-	
 	commandQueue_->Release();
-	
 	device_->Release();
-	
 	useAdapter_->Release();
-	
 	dxgiFactory_->Release();
-	
 	depthStencilResource_->Release();
-	
 	dsvDescriptorHeap_->Release();
-
 #ifdef DEBUG
 	winApp_->GetdebugController()->Release();
 #endif // DEBUG
