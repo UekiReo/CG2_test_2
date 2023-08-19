@@ -43,7 +43,7 @@ IDxcBlob* MyEngine::CompileShader(const std::wstring& filePath, const wchar_t* p
 	//警告・エラーが出たらログに出して止める
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
-	
+
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0)
 	{
 		Log(shaderError->GetStringPointer());
@@ -128,11 +128,12 @@ void MyEngine::CreateRootSignature()
 	//シリアライズしてバイナリにする
 	signatureBlob_ = nullptr;
 	errorBlob_ = nullptr;
+	
 	HRESULT hr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
-
-	if (FAILED(dxCommon_->GetHr())) 
+	
+	if (FAILED(dxCommon_->GetHr()))
 	{
 		Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
 		assert(false);
@@ -317,7 +318,7 @@ void MyEngine::Finalize()
 	dxCommon_->Finalize();
 }
 
-void MyEngine::Update() {}
+void MyEngine::Update(){}
 
 DirectX::ScratchImage MyEngine::LoadTexture(const std::string& filePath) 
 {
@@ -373,6 +374,7 @@ void MyEngine::UploadtextureData(ID3D12Resource* texture, const DirectX::Scratch
 {
 	//meta情報を取得
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+
 	for (size_t miplevel = 0; miplevel < metadata.mipLevels; ++miplevel)
 	{
 		const DirectX::Image* img = mipImages.GetImage(miplevel, 0, 0);

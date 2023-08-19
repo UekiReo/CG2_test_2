@@ -1,47 +1,50 @@
 #include "GameScene.h"
 
-void GameScene::Initialize(MyEngine* engine, DirectXCommon* direct) 
+void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon) 
 {
 	engine_ = engine;
-	dxCommon_ = direct;
+	dxCommon_ = dxCommon;
 
-	//三角形
-	data1_[0] = { -0.5f,-0.5f,0.0f,1.0f };
-	data2_[0] = { 0.0f,0.5f,0.0f,1.0f };
-	data3_[0] = { 0.5f,-0.5f,0.0f,1.0f };
-	material_[0] = { 1.0f,1.0f,1.0f,1.0f };
+	triangleData_[0].position[0] = { -0.5f,-0.5f,0.5f,1.0f };
+	triangleData_[0].position[1] = { 0.0f,0.0f,0.0f,1.0f };
+	triangleData_[0].position[2] = { 0.5f,-0.5f,-0.5f,1.0f };
+	triangleData_[0].material = { 1.0f,1.0f,1.0f,1.0f };
 
-	//二個目
-	data1_[1] = { -0.5f,-0.5f,0.5f,1.0f };
-	data2_[1] = { 0.0f,0.0f,0.0f,1.0f };
-	data3_[1] = { 0.5f,-0.5f,-0.5f,1.0f };
-	material_[1] = { 1.0f,1.0f,1.0f,1.0f };
+	triangleData_[1].position[0] = { -0.5f,-0.5f,0.0f,1.0f };
+	triangleData_[1].position[1] = { 0.0f,0.5f,0.0f,1.0f };
+	triangleData_[1].position[2] = { 0.5f,-0.5f,0.0f,1.0f };
+	triangleData_[1].material = { 1.0f,1.0f,1.0f,1.0f };
 
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
-	//スプライト
-	spriteDataLeftTop_[0] = { 0.0f,0.0f,0.0f,1.0f };
-	spriteDataRightDown_[0] = { 320.0f,180.0f,0.0f,1.0f };
-	spriteDataLeftTop_[1] = { 960.0f,540.0f,0.0f,1.0f };
-	spriteDataRightDown_[1] = { 1280.0f,720.0f,0.0f,1.0f };
-	spriteMaterial[0] = { 1.0f,1.0f,1.0f,1.0f };
+	spriteData_.positionLeftTop[0] = { 0.0f,0.0f,0.0f,1.0f };
+	spriteData_.positionRightDown[0] = { 640.0f,360.0f,0.0f,1.0f };
+	spriteData_.positionLeftTop[1] = { 0.0f,0.0f,0.0f,1.0f };
+	spriteData_.positionRightDown[1] = { 640.0f,360.0f,0.0f,1.0f };
+	spriteData_.material = { 1.0f,1.0f,1.0f,1.0f };
+	spriteTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
-	spriteTransform_[0] = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	sphereTransform_ = { {0.4f,0.4f,0.4f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	sphereMaterial_ = { 1.0f,1.0f,1.0f,1.0f };
 
-	engine_->SettingTexture("resource/uvChecker.png");
-
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 2; i++) 
 	{
 		triangle_[i] = new Triangle();
 		triangle_[i]->Initialize(dxCommon_, engine_);
 	}
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 2; i++) 
 	{
 		sprite_[i] = new Sprite();
 		sprite_[i]->Initialize(dxCommon_, engine_);
 	}
 
+	sphere_ = new Sphere();
+	sphere_->Initialize(dxCommon_, engine_);
+
+	engine_->SettingTexture("resource/uvChecker.png");
+
+	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 }
 
 void GameScene::Update() 
@@ -49,37 +52,63 @@ void GameScene::Update()
 	transform_.rotate.num[1] += 0.01f;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
-	ImGui::Begin("Sprite");
-	ImGui::SliderFloat3("Transform", spriteTransform_[0].translate.num, 0.0f, 600.0f);
+	sphereTransform_.rotate.num[1] += 0.02f;
+	sphereMatrix_ = MakeAffineMatrix(sphereTransform_.scale, sphereTransform_.rotate, sphereTransform_.translate);
+
+	Matrix4x4 sphereAffine = MakeAffineMatrix(sphereTransform_.scale, sphereTransform_.rotate, sphereTransform_.translate);
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(dxCommon_->GetWin()->kClientWidth) / float(dxCommon_->GetWin()->kClientHeight), 0.1f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix_, Multiply(viewMatrix, projectionMatrix));
+
+	worldMatrix_ = worldViewProjectionMatrix;
+	sphereMatrix_ = Multiply(sphereAffine, Multiply(viewMatrix, projectionMatrix));
+
+	ImGui::Begin("OPTION");
+	ImGui::DragFloat3("CameraTranslate", cameraTransform_.translate.num, 0.05f);
+	ImGui::DragFloat3("SpriteTranslate", spriteTransform_.translate.num, 0.05f);
+	ImGui::DragFloat3("SphereTranslate", sphereTransform_.translate.num, 0.05f);
+	ImGui::DragFloat3("SphereRotate", sphereTransform_.rotate.num, 0.05f);
+	ImGui::DragFloat3("SphereScale", sphereTransform_.scale.num, 0.05f);
 	ImGui::End();
 
 	ImGui::Begin("Color");
-	ImGui::ColorEdit3("TriangleColor", material_[0].num);
+	ImGui::ColorEdit3("TriangleColor", triangleData_[0].material.num);
+	ImGui::ColorEdit3("TriangleColor2", triangleData_[1].material.num);
+	ImGui::ColorEdit3("SphereColor", sphereMaterial_.num);
 	ImGui::End();
 }
 
 void GameScene::Draw()
 {
+#pragma region 3Dオブジェクト描画
 	for (int i = 0; i < 2; i++) 
 	{
-		triangle_[i]->Draw(data1_[i], data2_[i], data3_[i], material_[i], worldMatrix_);
+		triangle_[i]->Draw(triangleData_[i].position[0], triangleData_[i].position[1], triangleData_[i].position[2], triangleData_[i].material, worldMatrix_);
 	}
 
-	for (int i = 0; i < 1; i++) 
+	sphere_->Draw(sphereMaterial_, sphereMatrix_);
+#pragma endregion
+
+#pragma region 前景スプライト描画
+	for (int i = 0; i < 1; i++)
 	{
-		sprite_[i]->Draw(spriteDataLeftTop_[i], spriteDataRightDown_[i], spriteTransform_[i], spriteMaterial[0]);
+		sprite_[i]->Draw(spriteData_.positionLeftTop[i], spriteData_.positionRightDown[i], spriteTransform_, spriteData_.material);
 	}
+#pragma endregion
 }
 
-void GameScene::Finalize()
+void GameScene::Finalize() 
 {
-	for (int i = 0; i < 2; i++) 
+	for (int i = 0; i < 2; i++)
 	{
 		triangle_[i]->Finalize();
 	}
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 2; i++) 
 	{
 		sprite_[i]->Finalize();
 	}
+
+	sphere_->Finalize();
 }

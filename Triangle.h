@@ -24,7 +24,7 @@ private:
 
 	void SettingColor();
 
-	void MoveMatrix();
+	void TransformMatrix();
 
 private:
 	MyEngine* engine_;

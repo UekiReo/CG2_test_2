@@ -80,6 +80,7 @@ void DirectXCommon::InitializeDXGIDevice()
 		}
 		useAdapter_ = nullptr;//ソフトウェアアダプタの場合は無視
 	}
+	
 	//適切なアダプタがないため起動しない
 	assert(useAdapter_ != nullptr);
 
@@ -93,7 +94,7 @@ void DirectXCommon::InitializeDXGIDevice()
 	const char* featureLevelString[] = { "12.2","12.1","12.0" };
 	
 	//高い順に生成できるか確認
-	for (size_t i = 0; i < _countof(featureLevels); i++) 
+	for (size_t i = 0; i < _countof(featureLevels); i++)
 	{
 		//採用したアダプターでデバイス生成
 		hr_ = D3D12CreateDevice(useAdapter_, featureLevels[i], IID_PPV_ARGS(&device_));

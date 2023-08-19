@@ -4,37 +4,42 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "VertexData.h"
-#include "MyEngine.h"
+#include "MatrixCalculation.h"
 
-class Sprite 
+class MyEngine;
+
+class Sphere
 {
 public:
 	void Initialize(DirectXCommon* dxCommon, MyEngine* engine);
 
-	void Draw(const Vector4& a, const Vector4& b, const Transform& transform, const Vector4& material);
-	
+	void Draw(const Vector4& material, const Matrix4x4& wvpdata);
+
 	void Finalize();
 
 private:
-	void SettingVartex();
-
-	void TransformMatrix();
-
+	void SettingVertex();
+	
 	void SettingColor();
+	
+	void TransformMatrix();
 
 private:
 	DirectXCommon* dxCommon_;
 	MyEngine* engine_;
-	
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
-	
-	ID3D12Resource* vertexResourceSprite_;
+
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	ID3D12Resource* vertexResource;
 	VertexData* vertexData_;
-	
-	ID3D12Resource* transformationMatrixResource_;
-	Matrix4x4* transformationMatrixdata_;
-	
+
+	ID3D12Resource* wvpResource_;
+	Matrix4x4* wvpData_;
+
 	ID3D12Resource* materialResource_;
 	Vector4* materialData_;
+
+	const float pi = 3.1415f;
+	uint32_t kSubDivision;
+	uint32_t vertexCount;
 };
 

@@ -8,7 +8,7 @@ void Triangle::Initialize(DirectXCommon* dxCommon, MyEngine* engine)
 	engine_ = engine;
 	SettingVertex();
 	SettingColor();
-	MoveMatrix();
+	TransformMatrix();
 }
 
 void Triangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, const Vector4& material, const Matrix4x4& wvpdata)
@@ -39,7 +39,7 @@ void Triangle::Draw(const Vector4& a, const Vector4& b, const Vector4& c, const 
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
 	//SRVのDescriptorTableの先頭を設定。2はrootParameter[2]のこと
-	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, engine_->GetSRVHandleGPU());
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, engine_->textureSrvHandleGPU_);
 
 	//描画
 	dxCommon_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
@@ -78,7 +78,7 @@ void Triangle::SettingColor()
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
-void Triangle::MoveMatrix() 
+void Triangle::TransformMatrix()
 {
 	wvpResource_ = dxCommon_->CreateBufferResource(dxCommon_->GetDevice(), sizeof(Matrix4x4));
 	wvpResource_->Map(0, NULL, reinterpret_cast<void**>(&wvpData_));
