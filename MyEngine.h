@@ -1,13 +1,13 @@
 #pragma once
 #include "DirectXCommon.h"
 #include <dxcapi.h>
+#include "ConvertString.h"
+#include "MatrixCalculation.h"
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
 #include "VertexData.h"
 #include "Triangle.h"
-#include "MatrixCalculation.h"
-#include "ConvertString.h"
 #include "externals/DirectXTex/d3dx12.h"
 #include <vector>
 #pragma comment(lib,"dxcompiler.lib")
@@ -36,7 +36,6 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorheap, uint32_t descriptorSize, uint32_t index);
 
 private:
-	static WinApp* win_;
 	static	DirectXCommon* dxCommon_;
 
 	IDxcUtils* dxcUtils_;

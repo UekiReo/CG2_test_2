@@ -42,4 +42,3 @@ private:
 	uint32_t kSubDivision;
 	uint32_t vertexCount;
 };
-

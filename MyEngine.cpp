@@ -44,7 +44,7 @@ IDxcBlob* MyEngine::CompileShader(const std::wstring& filePath, const wchar_t* p
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	
-	if (shaderError != nullptr && shaderError->GetStringLength() != 0)
+	if (shaderError != nullptr && shaderError->GetStringLength() != 0) 
 	{
 		Log(shaderError->GetStringPointer());
 		//警告・エラーダメ絶対
@@ -128,13 +128,12 @@ void MyEngine::CreateRootSignature()
 	//シリアライズしてバイナリにする
 	signatureBlob_ = nullptr;
 	errorBlob_ = nullptr;
-	
+
 	HRESULT hr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_, &errorBlob_);
 	
-	if (FAILED(dxCommon_->GetHr())) 
-	{
+	if (FAILED(dxCommon_->GetHr())) {
 		Log(reinterpret_cast<char*>(errorBlob_->GetBufferPointer()));
 		assert(false);
 	}
@@ -182,6 +181,7 @@ void MyEngine::RasterizerState()
 		L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(vertexShaderBlob_ != nullptr);
 
+
 	pixelShaderBlob_ = CompileShader(L"Object3d.PS.hlsl",
 		L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(pixelShaderBlob_ != nullptr);
@@ -220,7 +220,7 @@ void MyEngine::InitializePSO()
 	assert(SUCCEEDED(hr));
 }
 
-void MyEngine::ViewPort() 
+void MyEngine::ViewPort()
 {
 	//クライアント領域のサイズと一緒にして画面全体に表示
 	viewport_.Width = WinApp::kClientWidth;
@@ -248,10 +248,14 @@ void MyEngine::SettingDepth()
 	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;//比較関数、近ければ描画される
 }
 
-void MyEngine::Initialize(const wchar_t* title, int32_t width, int32_t height)
+void MyEngine::Initialize(const wchar_t* title, int32_t width, int32_t height) 
 {
 	dxCommon_ = new DirectXCommon();
 	dxCommon_->Initialization(title, WinApp::GetInstance()->kClientWidth, WinApp::GetInstance()->kClientHeight);
+
+	descriptorSizeDSV = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	descriptorSizeRTV = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeSRV = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	InitializeDxcCompiler();
 
@@ -272,7 +276,8 @@ void MyEngine::Initialize(const wchar_t* title, int32_t width, int32_t height)
 	ScissorRect();
 }
 
-void MyEngine::BeginFrame() 
+
+void MyEngine::BeginFrame()
 {
 	dxCommon_->PreDraw();
 	
@@ -292,7 +297,7 @@ void MyEngine::BeginFrame()
 	ImGui::ShowDemoWindow();
 }
 
-void MyEngine::EndFrame() 
+void MyEngine::EndFrame()
 {
 	//内部コマンドを生成する
 	ImGui::Render();
@@ -311,7 +316,7 @@ void MyEngine::Finalize()
 	graphicsPipelineState_->Release();
 	signatureBlob_->Release();
 	
-	if (errorBlob_) 
+	if (errorBlob_)
 	{
 		errorBlob_->Release();
 	}
@@ -322,9 +327,12 @@ void MyEngine::Finalize()
 	dxCommon_->Finalize();
 }
 
-void MyEngine::Update() {}
+void MyEngine::Update()
+{
 
-DirectX::ScratchImage MyEngine::LoadTexture(const std::string& filePath)
+}
+
+DirectX::ScratchImage MyEngine::LoadTexture(const std::string& filePath) 
 {
 	//テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
@@ -374,6 +382,7 @@ ID3D12Resource* MyEngine::CreateTextureResource(ID3D12Device* device, const Dire
 	return resource;
 }
 
+
 [[nodiscard]]
 ID3D12Resource* MyEngine::UploadtextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, uint32_t index)
 {
@@ -420,7 +429,7 @@ void MyEngine::SettingTexture(const std::string& filePath, uint32_t index)
 	dxCommon_->GetDevice()->CreateShaderResourceView(textureResource_[index], &srvDesc, textureSrvHandleCPU_[index]);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE MyEngine::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorheap, uint32_t descriptorSize, uint32_t index)
+D3D12_CPU_DESCRIPTOR_HANDLE MyEngine::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorheap, uint32_t descriptorSize, uint32_t index) 
 {
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorheap->GetCPUDescriptorHandleForHeapStart();
 	handleCPU.ptr += (descriptorSize * index);
@@ -434,5 +443,4 @@ D3D12_GPU_DESCRIPTOR_HANDLE MyEngine::GetGPUDescriptorHandle(ID3D12DescriptorHea
 	return handleGPU;
 }
 
-WinApp* MyEngine::win_;
 DirectXCommon* MyEngine::dxCommon_;
