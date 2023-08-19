@@ -1,6 +1,7 @@
 #include "GameScene.h"
 
-void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon) {
+void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon) 
+{
 	engine_ = engine;
 	dxCommon_ = dxCommon;
 
@@ -33,12 +34,14 @@ void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon) {
 	monsterBallResourceNum = 1;
 	engine_->SettingTexture("resources/monsterBall.png", monsterBallResourceNum);
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 2; i++)
+	{
 		triangle_[i] = new Triangle();
 		triangle_[i]->Initialize(dxCommon_, engine_);
 	}
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 2; i++) 
+	{
 		sprite_[i] = new Sprite();
 		sprite_[i]->Initialize(dxCommon_, engine_);
 	}
@@ -49,11 +52,12 @@ void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon) {
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 }
 
-void GameScene::Update() {
+void GameScene::Update() 
+{
 	transform_.rotate.num[1] += 0.01f;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
-	sphereTransform_.rotate.num[1] += 0.02f;
+	sphereTransform_.rotate.num[1] += 0.01f;
 	sphereMatrix_ = MakeAffineMatrix(sphereTransform_.scale, sphereTransform_.rotate, sphereTransform_.translate);
 
 	Matrix4x4 sphereAffine = MakeAffineMatrix(sphereTransform_.scale, sphereTransform_.rotate, sphereTransform_.translate);
@@ -78,9 +82,11 @@ void GameScene::Update() {
 	ImGui::End();
 }
 
-void GameScene::Draw() {
+void GameScene::Draw() 
+{
 #pragma region 3Dオブジェクト描画
-	for (int i = 0; i < 2; i++) {//Triangle描画
+	for (int i = 0; i < 2; i++)
+	{
 		triangle_[i]->Draw(triangleData_[i].position[0], triangleData_[i].position[1], triangleData_[i].position[2], triangleData_[i].material, worldMatrix_, uvResourceNum);
 	}
 
@@ -88,18 +94,22 @@ void GameScene::Draw() {
 #pragma endregion
 
 #pragma region 前景スプライト描画
-	for (int i = 0; i < 1; i++) {//Sprite描画
+	for (int i = 0; i < 1; i++)
+	{
 		sprite_[i]->Draw(spriteData_.positionLeftTop[i], spriteData_.positionRightDown[i], spriteTransform_, spriteData_.material, uvResourceNum);
 	}
 #pragma endregion
 }
 
-void GameScene::Finalize() {
-	for (int i = 0; i < 2; i++) {
+void GameScene::Finalize() 
+{
+	for (int i = 0; i < 2; i++)
+	{
 		triangle_[i]->Finalize();
 	}
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 2; i++) 
+	{
 		sprite_[i]->Finalize();
 	}
 
