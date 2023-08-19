@@ -11,7 +11,7 @@
 class GameScene 
 {
 public:
-	void Initialize(MyEngine* engine, DirectXCommon* direct);
+	void Initialize(MyEngine* engine, DirectXCommon* dxCommon);
 	
 	void Update();
 	
