@@ -65,17 +65,14 @@ void GameScene::Update()
 	sphereMatrix_ = Multiply(sphereAffine, Multiply(viewMatrix, projectionMatrix));
 
 	ImGui::Begin("OPTION");
+	ImGui::ColorEdit3("TriangleColor", triangleData_[0].material.num);
+	ImGui::ColorEdit3("TriangleColor2", triangleData_[1].material.num);
+	ImGui::ColorEdit3("SphereColor", sphereMaterial_.num);
 	ImGui::DragFloat3("CameraTranslate", cameraTransform_.translate.num, 0.05f);
 	ImGui::DragFloat3("SpriteTranslate", spriteTransform_.translate.num, 0.05f);
 	ImGui::DragFloat3("SphereTranslate", sphereTransform_.translate.num, 0.05f);
 	ImGui::DragFloat3("SphereRotate", sphereTransform_.rotate.num, 0.05f);
 	ImGui::DragFloat3("SphereScale", sphereTransform_.scale.num, 0.05f);
-	ImGui::End();
-
-	ImGui::Begin("Color");
-	ImGui::ColorEdit3("TriangleColor", triangleData_[0].material.num);
-	ImGui::ColorEdit3("TriangleColor2", triangleData_[1].material.num);
-	ImGui::ColorEdit3("SphereColor", sphereMaterial_.num);
 	ImGui::End();
 }
 
