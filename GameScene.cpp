@@ -28,7 +28,7 @@ void GameScene::Initialize(MyEngine* engine, DirectXCommon* direct)
 
 	spriteTransform_[0] = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
-	engine_->SettingTexture("resources/uvChecker.png");
+	engine_->SettingTexture("resource/uvChecker.png");
 
 	for (int i = 0; i < 2; i++)
 	{
