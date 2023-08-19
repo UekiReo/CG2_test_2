@@ -37,9 +37,7 @@ void GameScene::Initialize(MyEngine* engine, DirectXCommon* dxCommon)
 
 	sphereDraw_ = false;
 
-	directionalLight_.color = { 1.0f,1.0f,1.0f,1.0f };
-	directionalLight_.direction = { 0.0f,-1.0f,0.0f };
-	directionalLight_.intensity = 1.0f;
+	directionalLight_ = { {1.0f,1.0f,1.0f,1.0f},{0.0f,-1.0f,0.0f},1.0f };
 
 	texture_ = 0;
 	uvResourceNum_ = 0;
@@ -195,17 +193,17 @@ void GameScene::Draw()
 {
 	if (triangleDrawA_) 
 	{
-		triangle_[0]->Draw(triangleData_[0].position[0], triangleData_[0].position[1], triangleData_[0].position[2], triangleData_[0].material, transform_[0], cameraTransform_, uvResourceNum_, directionalLight_);
+		triangle_[0]->Draw(triangleData_[0], transform_[0], cameraTransform_, uvResourceNum_, directionalLight_);
 	}
 
 	if (triangleDrawB_) 
 	{
-		triangle_[1]->Draw(triangleData_[1].position[0], triangleData_[1].position[1], triangleData_[1].position[2], triangleData_[1].material, transform_[1], cameraTransform_, uvResourceNum_, directionalLight_);
+		triangle_[1]->Draw(triangleData_[1], transform_[1], cameraTransform_, uvResourceNum_, directionalLight_);
 	}
 
 	if (sphereDraw_) 
 	{
-		sphere_->Draw(sphereMaterial_, sphereTransform_, texture_, cameraTransform_, directionalLight_);
+		sphere_->Draw(sphereMaterial_, sphereTransform_, sphereMatrix_, texture_, cameraTransform_, directionalLight_);
 	}
 
 	if (spriteDraw_) 

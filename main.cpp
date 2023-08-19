@@ -11,15 +11,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//初期化
 	MyEngine* engine = new MyEngine;
-    engine->Initialize(kWindowTitle, 1280, 720);
+	engine->Initialize(kWindowTitle, 1280, 720);
 
 	GameScene* gameScene = new GameScene();
 	gameScene->Initialize(engine, engine->GetDirectXCommon());
-
-	while (true)
+	
+	while (true) 
 	{
 		//windowのメッセージを最優先で処理させる
-		if (WinApp::GetInstance()->Procesmessage())
+		if (WinApp::GetInstance()->Procesmessage()) 
 		{
 			break;
 		}
@@ -36,9 +36,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//解放処理
 	gameScene->Finalize();
-	
 	engine->Finalize();
-	
 	CoUninitialize();
 	
 	return 0;

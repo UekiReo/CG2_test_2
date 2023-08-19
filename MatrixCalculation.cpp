@@ -1,21 +1,21 @@
 #include "MatrixCalculation.h"
 
-Vector3 Normalise(const Vector3& v) 
+Vector3 Normalise(const Vector3& v)
 {
 	float len = Length(v);
-	if (len != 0)
+	if (len != 0) 
 	{
 		return { v.num[0] / len,v.num[1] / len,v.num[2] / len };
 	}
 	return v;
 }
 
-float Length(const Vector3& v) 
+float Length(const Vector3& v)
 {
 	return sqrtf(Dot(v, v));
 }
 
-float Dot(const Vector3& v1, const Vector3& v2) 
+float Dot(const Vector3& v1, const Vector3& v2)
 {
 	return v1.num[0] * v2.num[0] + v1.num[1] * v2.num[1] + v1.num[2] * v2.num[2];
 }
@@ -73,7 +73,7 @@ Matrix4x4 MakeRotateYmatrix(float radian)
 }
 
 //Z軸回転行列
-Matrix4x4 MakeRotateZmatrix(float radian) 
+Matrix4x4 MakeRotateZmatrix(float radian)
 {
 	Matrix4x4 result;
 	result.m[0][0] = std::cos(radian);
@@ -171,12 +171,12 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 }
 
 //行列の加法
-Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2)
+Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2) 
 {
 	Matrix4x4 result;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++) 
 	{
-		for (int j = 0; j < 4; j++) 
+		for (int j = 0; j < 4; j++)
 		{
 			result.m[i][j] = m1.m[i][j] + m2.m[i][j];
 		}
@@ -188,7 +188,7 @@ Matrix4x4 Add(const Matrix4x4& m1, const Matrix4x4& m2)
 Matrix4x4 Sub(const Matrix4x4& m1, const Matrix4x4& m2)
 {
 	Matrix4x4 result;
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++) 
 	{
 		for (int j = 0; j < 4; j++) 
 		{
@@ -204,7 +204,7 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 4; j++) 
+		for (int j = 0; j < 4; j++)
 		{
 			float Term = 0;
 			for (int k = 0; k < 4; k++) 
@@ -376,12 +376,12 @@ Matrix4x4 Inverse(const Matrix4x4& m1)
 }
 
 //転置行列
-Matrix4x4 Transpose(const Matrix4x4& m) 
+Matrix4x4 Transpose(const Matrix4x4& m)
 {
 	Matrix4x4 result;
-	for (int i = 0; i < 4; ++i) 
+	for (int i = 0; i < 4; ++i)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int j = 0; j < 4; ++j) 
 		{
 			result.m[j][i] = m.m[i][j];
 		}
@@ -392,7 +392,8 @@ Matrix4x4 Transpose(const Matrix4x4& m)
 //単位行列
 Matrix4x4 MakeIdentity4x4()
 {
-	return{
+	return
+	{
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
@@ -433,7 +434,7 @@ Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRadio, float nearClip
 }
 
 // 正射影行列
-Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip)
+Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) 
 {
 	Matrix4x4 result;
 	result.m[0][0] = 2 / (right - left);
