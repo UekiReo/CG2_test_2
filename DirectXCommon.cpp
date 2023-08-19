@@ -10,14 +10,12 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "Winmm.lib")
 
-void DirectXCommon::Initialization(WinApp* win, const wchar_t* title, int32_t backBufferWidth, int32_t backBufferHeight) 
+void DirectXCommon::Initialization(const wchar_t* title, int32_t backBufferWidth, int32_t backBufferHeight)
 {
-
-	winApp_ = win;
 	backBufferWidth_ = backBufferWidth;
 	backBufferHeight_ = backBufferHeight;
 
-	winApp_->CreateWindowView(title, 1280, 720);
+	WinApp::GetInstance()->CreateWindowView(title, 1280, 720);
 
 	// DXGIデバイス初期化
 	InitializeDXGIDevice();
@@ -44,7 +42,7 @@ void DirectXCommon::ImGuiInitialize()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(winApp_->GetHwnd());
+	ImGui_ImplWin32_Init(WinApp::GetInstance()->GetHwnd());
 	ImGui_ImplDX12_Init(device_,
 		swapChainDesc_.BufferCount,
 		rtvDesc_.Format,
@@ -181,7 +179,7 @@ void DirectXCommon::CreateSwapChain()
 	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;//モニタに移したら中身を破棄
 
 	//コマンドキュー、ウィンドウハンドル、設定を渡して生成
-	hr_ = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_, winApp_->GetHwnd(), &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain_));
+	hr_ = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_, WinApp::GetInstance()->GetHwnd(), &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain_));
 	assert(SUCCEEDED(hr_));
 
 	//RTV用ディスクリプタヒープの生成
@@ -456,11 +454,12 @@ void DirectXCommon::Finalize()
 	dxgiFactory_->Release();
 	depthStencilResource_->Release();
 	dsvDescriptorHeap_->Release();
+
 #ifdef DEBUG
 	winApp_->GetdebugController()->Release();
 #endif // DEBUG
 
-	CloseWindow(winApp_->GetHwnd());
+	CloseWindow(WinApp::GetInstance()->GetHwnd());
 	
 	////リソースリークチェック
 	IDXGIDebug1* debug;

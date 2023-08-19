@@ -13,7 +13,7 @@
 class MyEngine
 {
 public:
-	void Initialize(WinApp* win, const wchar_t* title, int32_t width, int32_t height);
+	void Initialize(const wchar_t* title, int32_t width, int32_t height);
 
 	void BeginFrame();
 

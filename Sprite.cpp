@@ -1,4 +1,4 @@
-﻿#include "Sprite.h"
+#include "Sprite.h"
 
 void Sprite::Initialize(DirectXCommon* dxCommon, MyEngine* engine)
 {
@@ -7,6 +7,13 @@ void Sprite::Initialize(DirectXCommon* dxCommon, MyEngine* engine)
 	CreateVartexData();
 	SetColor();
 	CreateTransform();
+}
+
+void Sprite::SetColor() 
+{
+	materialResource_ = DirectXCommon::CreateBufferResource(dxCommon_->GetDevice(), sizeof(VertexData));
+
+	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
 void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform& transform, const Vector4& material)
@@ -42,14 +49,14 @@ void Sprite::Draw(const Vector4& a, const Vector4& b, const Transform& transform
 	dxCommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
 
-void Sprite::Finalize()
+void Sprite::Finalize() 
 {
 	vertexResourceSprite_->Release();
 	materialResource_->Release();
 	transformationMatrixResource_->Release();
 }
 
-void Sprite::CreateVartexData()
+void Sprite::CreateVartexData() 
 {
 	//Sprite用のリソースを作る
 	vertexResourceSprite_ = dxCommon_->CreateBufferResource(dxCommon_->GetDevice(), sizeof(VertexData) * 6);
@@ -74,13 +81,7 @@ void Sprite::CreateTransform()
 
 	//書き込むアドレスを取得
 	transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixdata_));
+	
 	//単位行列を書き込んでおく
 	*transformationMatrixdata_ = MakeIdentity4x4();
-}
-
-void Sprite::SetColor()
-{
-	materialResource_ = DirectXCommon::CreateBufferResource(dxCommon_->GetDevice(), sizeof(VertexData));
-
-	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }

@@ -28,6 +28,12 @@ public:
 
 	void CreateWindowView(const wchar_t* title, int32_t clientWidth, int32_t clientheight);
 
+	WinApp(const WinApp& obj) = delete;
+
+	WinApp& operator=(const WinApp& obj) = delete;
+
+	static WinApp* GetInstance();
+
 private:
 	UINT windowStyle_;
 
@@ -36,4 +42,8 @@ private:
 	static inline WNDCLASS wc_{};//ウィンドウクラス
 
 	static HWND hwnd_;
+
+	WinApp() = default;
+
+	~WinApp() = default;
 };

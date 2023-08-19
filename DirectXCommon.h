@@ -6,9 +6,10 @@
 #include "ConvertString.h"
 #include "externals/DirectXTex/DirectXTex.h"
 
-class DirectXCommon {
+class DirectXCommon 
+{
 public:
-	void Initialization(WinApp* win, const wchar_t* title, int32_t backBufferWidth = WinApp::kClientWidth, int32_t backBufferHeight = WinApp::kClientHeight);
+	void Initialization(const wchar_t* title, int32_t backBufferWidth = WinApp::kClientWidth, int32_t backBufferHeight = WinApp::kClientHeight);
 
 	void ImGuiInitialize();
 
@@ -20,7 +21,7 @@ public:
 
 	static ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
-	WinApp* GetWin() { return winApp_; }
+	WinApp* GetWin() { return WinApp::GetInstance(); }
 
 	HRESULT GetHr() { return  hr_; }
 	void SetHr(HRESULT a) { this->hr_ = a; }
@@ -30,23 +31,6 @@ public:
 	ID3D12DescriptorHeap* GetSrvDescriptiorHeap() { return srvDescriptorHeap_; }
 
 private:
-	void InitializeDXGIDevice();
-
-	void CreateSwapChain();
-
-	void InitializeCommand();
-
-	void CreateFinalRenderTargets();
-
-	void CreateFence();
-
-	ID3D12Resource* CreateDepthStenciltextureResource(ID3D12Device* device, int32_t width, int32_t height);
-
-	void CreateDepthStensil();
-
-private:
-	WinApp* winApp_;
-
 	//DXGIファクトリーの生成
 	IDXGIFactory7* dxgiFactory_;
 
@@ -95,4 +79,19 @@ private:
 	ID3D12Resource* depthStencilResource_;
 	ID3D12DescriptorHeap* dsvDescriptorHeap_;
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvhandle_;
+
+private:
+	void InitializeDXGIDevice();
+
+	void CreateSwapChain();
+
+	void InitializeCommand();
+
+	void CreateFinalRenderTargets();
+
+	void CreateFence();
+
+	ID3D12Resource* CreateDepthStenciltextureResource(ID3D12Device* device, int32_t width, int32_t height);
+
+	void CreateDepthStensil();
 };
